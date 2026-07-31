@@ -4,7 +4,6 @@
     box-sizing: border-box;
 }
 
-
 body {
 
     background: #0b0b0b;
@@ -15,8 +14,6 @@ body {
 
 }
 
-
-
 .container{
 
     width:90%;
@@ -26,8 +23,6 @@ body {
     margin:50px auto;
 
 }
-
-
 
 h1{
 
@@ -43,8 +38,6 @@ h1{
 
 }
 
-
-
 h2{
 
     text-align:center;
@@ -55,8 +48,6 @@ h2{
 
 }
 
-
-
 p{
 
     text-align:center;
@@ -66,8 +57,6 @@ p{
     margin-bottom:30px;
 
 }
-
-
 
 .chat-box{
 
@@ -83,9 +72,6 @@ p{
 
 }
 
-
-
-
 #messages{
 
     height:450px;
@@ -97,10 +83,6 @@ p{
     padding:10px;
 
 }
-
-
-
-
 
 .bot{
 
@@ -118,10 +100,6 @@ p{
 
 }
 
-
-
-
-
 .user{
 
     background:#c90000;
@@ -137,15 +115,88 @@ p{
 }
 
 
+/* ===========================
+   AI RECOMMENDATION CARD
+=========================== */
 
+.ai-summary{
 
+    background:linear-gradient(135deg,#1b1b1b,#111);
+
+    border:2px solid #ff1e1e;
+
+    border-radius:16px;
+
+    padding:22px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 0 25px rgba(255,0,0,.25);
+
+    line-height:1.7;
+
+}
+
+.ai-summary::before{
+
+    content:"🏁 SS RACETECH AI";
+
+    display:block;
+
+    color:#ff4040;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+
+    margin-bottom:12px;
+
+}
+
+.ai-summary strong{
+
+    color:#ffffff;
+
+    font-size:20px;
+
+}
+
+.ai-summary p{
+
+    color:#d5d5d5;
+
+    margin:10px 0;
+
+    text-align:left;
+
+}
+
+.ai-summary .highlight{
+
+    color:#ff4d4d;
+
+    font-weight:bold;
+
+}
+
+.ai-summary hr{
+
+    border:none;
+
+    border-top:1px solid #333;
+
+    margin:15px 0;
+
+}
 
 
 /* PRODUCT RESULTS */
 
-
 .product-card{
-
 
     background:#101010;
 
@@ -165,10 +216,7 @@ p{
 
 }
 
-
-
 .product-card:hover{
-
 
     transform:translateY(-5px);
 
@@ -176,12 +224,7 @@ p{
 
 }
 
-
-
-
-
 .product-card img{
-
 
     max-width:250px;
 
@@ -195,12 +238,7 @@ p{
 
 }
 
-
-
-
-
 .product-card strong{
-
 
     font-size:18px;
 
@@ -208,12 +246,7 @@ p{
 
 }
 
-
-
-
-
 .product-card a{
-
 
     display:inline-block;
 
@@ -235,20 +268,14 @@ p{
 
 }
 
-
-
-
-
 .product-card a:hover{
-
 
     background:#ff3030;
 
 }
 
 
-
-
+/* INPUT AREA */
 
 .input-area{
 
@@ -258,11 +285,7 @@ p{
 
 }
 
-
-
-
 input{
-
 
     flex:1;
 
@@ -274,13 +297,19 @@ input{
 
     font-size:16px;
 
+    background:#222;
+
+    color:#fff;
+
 }
 
+input::placeholder{
 
+    color:#888;
 
+}
 
 button{
-
 
     background:#d60000;
 
@@ -298,23 +327,17 @@ button{
 
     font-weight:bold;
 
+    transition:.3s;
+
 }
 
-
-
-
 button:hover{
-
 
     background:#ff3030;
 
 }
 
-
-
-
 @media(max-width:600px){
-
 
     h1{
 
@@ -322,19 +345,16 @@ button:hover{
 
     }
 
-
     .input-area{
 
         flex-direction:column;
 
     }
 
-
     button{
 
         width:100%;
 
     }
-
 
 }
