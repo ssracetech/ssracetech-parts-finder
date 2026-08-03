@@ -26,6 +26,45 @@ loadProducts().then(products => {
 
 function ssrSearch(query){
 
+
+    const search = query.toLowerCase().trim();
+
+
+
+    // ================================
+    // EXACT SKU SEARCH LOCK V1
+    // ================================
+
+    const exactSku = v3Products.filter(product=>{
+
+        const sku = (
+            product["Variant SKU"] || ""
+        ).toLowerCase().trim();
+
+
+        return sku === search;
+
+    });
+
+
+    if(exactSku.length){
+
+        return exactSku.map(product=>({
+
+            product,
+
+            score:50000
+
+        })).slice(0,5);
+
+    }
+
+
+
+    // ================================
+    // NORMAL AI SCORING SEARCH
+    // ================================
+
     return v3Products
 
         .map(product => ({
@@ -38,9 +77,9 @@ function ssrSearch(query){
 
         .sort((a,b)=>b.score-a.score)
 
-.filter(x=>x.score >= 500)
+        .filter(x=>x.score >= 500)
 
-.slice(0,5);
+        .slice(0,5);
 
 }
 
@@ -78,7 +117,7 @@ Try adding:
 const topResults = results.slice(0,3);
 
 const best = topResults[0].product;
-
+const bestTitle = best["Title"] || "";
 const bestScore = results[0].score;
 
 const sku = best["Variant SKU"] || "N/A";
@@ -134,16 +173,34 @@ const search = query.toLowerCase();
 // INTELLIGENT RECOMMENDATION REASONS V3
 // ================================
 
-const productTitle = best["Title"].toLowerCase();
-
-
+const productTitle = best && best["Title"]
+    ? best["Title"].toLowerCase()
+    : "";
 // ================================
-// STARTER MOTOR
+// SKU SEARCH RESPONSE
 // ================================
 
 if(
-    search.includes("starter")
+    best &&
+    best["Variant SKU"] &&
+    search === best["Variant SKU"].toLowerCase()
 ){
+
+    response += `
+✅ Exact part number match found
+✅ Product identified from SS Racetech database
+✅ Direct product application match
+`;
+
+}
+
+
+// ================================
+// INTELLIGENT RECOMMENDATION V5
+// ================================
+
+
+else if(search.includes("starter")){
 
     response += `
 ✅ Correct starter motor application match
@@ -154,98 +211,19 @@ if(
 }
 
 
-// ================================
-// LS INTAKE / MANIFOLD
-// ================================
-
 else if(
     search.includes("intake") ||
     search.includes("manifold")
 ){
 
-
-    // LS3 REQUEST
-
-    if(
-        search.includes("ls3") &&
-        (
-            productTitle.includes("ls3") ||
-            productTitle.includes("l92")
-        )
-    ){
-
-        response += `
-✅ LS3/L92 intake application match
-✅ High airflow performance manifold design
-✅ 102mm throttle body compatible option
-`;
-
-    }
-
-
-    // LS2 REQUEST
-
-    else if(
-        search.includes("ls2") &&
-        productTitle.includes("ls2")
-    ){
-
-        response += `
-✅ LS2 intake application match
-✅ Cathedral port LS performance manifold
-✅ Suitable for street and race engine builds
-`;
-
-    }
-
-
-    // LS1 REQUEST
-
-    else if(
-        search.includes("ls1") &&
-        productTitle.includes("ls1")
-    ){
-
-        response += `
-✅ LS1 intake application match
-✅ Cathedral port LS performance manifold
-✅ Suitable for street and race engine builds
-`;
-
-    }
-
-
-    // Generic LS fallback
-
-    else if(
-        productTitle.includes("ls")
-    ){
-
-        response += `
-✅ LS performance intake manifold
-✅ Designed for improved airflow
-✅ Suitable for performance engine applications
-`;
-
-    }
-
-
-    else{
-
-        response += `
-✅ Performance intake manifold application
+    response += `
+✅ Performance intake manifold application match
 ✅ Designed for improved airflow
 ✅ Suitable for performance engine builds
 `;
 
-    }
-
 }
 
-
-// ================================
-// AN / HOSE END / FITTINGS
-// ================================
 
 else if(
     search.includes("hose") ||
@@ -262,10 +240,7 @@ else if(
 }
 
 
-// ================================
-// TRANSMISSION COOLERS
-// ================================
-if(
+else if(
     search.includes("cooler") ||
     search.includes("transmission")
 ){
@@ -278,10 +253,6 @@ if(
 
 }
 
-
-// ================================
-// DEFAULT
-// ================================
 
 else{
 
@@ -391,11 +362,38 @@ function ssrScoreProduct(product, query){
     let score = 0;
 
     const title = (
-        product["Title"] || ""
-    ).toLowerCase();
+    product["Title"] || ""
+).toLowerCase();
 
-    const search = query.toLowerCase();
 
+const sku = (
+    product["Variant SKU"] || ""
+).toLowerCase();
+
+
+const search = query.toLowerCase();
+// ================================
+// EXACT SKU MATCH INTELLIGENCE V1
+// ================================
+
+if(
+    sku &&
+    search === sku
+){
+
+    score += 50000;
+
+}
+
+
+if(
+    sku &&
+    search.includes(sku)
+){
+
+    score += 30000;
+
+}
 
 // ================================
 // STARTER MOTOR STRICT FILTER V1
