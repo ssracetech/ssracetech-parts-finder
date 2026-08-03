@@ -358,3 +358,58 @@ button:hover{
     }
 
 }
+/* ================================
+   SSRACETECH PRODUCT CARDS V1
+================================ */
+
+
+.product-card {
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 15px 0;
+    background: white;
+
+}
+
+
+.product-image {
+
+    width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 15px auto;
+
+}
+
+
+.product-card h3 {
+
+    font-size: 18px;
+    line-height: 1.3;
+    margin-bottom: 12px;
+
+}
+
+
+.product-card p {
+
+    margin: 8px 0;
+
+}
+
+
+.product-button {
+
+    display: inline-block;
+    padding: 12px 22px;
+    margin-top: 15px;
+
+    text-decoration: none;
+    font-weight: bold;
+
+    border-radius: 8px;
+
+}
