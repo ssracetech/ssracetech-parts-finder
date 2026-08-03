@@ -323,57 +323,7 @@ I can also help check:
 
 response = response.replace(/\n/g,"<br>");
 
-// ================================
-// V4 TOP 3 PRODUCT RESULTS
-// ================================
-
-let productCards = "";
-
-
-results.slice(0,3).forEach((item,index)=>{
-
-
-    if(index === 0){
-
-        productCards += `
-        
-🏆 TOP MATCH
-
-`;
-
-    }
-
-
-    if(index === 1){
-
-        productCards += `
-        
-🥈 ALTERNATIVE OPTION
-
-`;
-
-    }
-
-
-    if(index === 2){
-
-        productCards += `
-        
-🥉 ANOTHER OPTION
-
-`;
-
-    }
-
-
-
-    productCards += ssrCreateProductCard(
-        item.product,
-        item.score
-    );
-
-
-});
+;
 
 
 // ================================
@@ -444,8 +394,6 @@ results.slice(0,3).forEach((item,index)=>{
 
 return response + productCards;
 
-return response + productCards;
-
 }
 
 window.ssrBuildResponse = ssrBuildResponse;
@@ -497,7 +445,9 @@ if(search.includes("starter")){
 
         score -= 20000;
 
-    }
+    }// ================================
+// V4 TOP 3 PRODUCT RESULTS
+// ================================
 
 }
 
