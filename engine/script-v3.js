@@ -117,38 +117,107 @@ Try adding:
 const topResults = results.slice(0,3);
 
 const best = topResults[0].product;
+
 const bestTitle = best["Title"] || "";
+
 const bestScore = results[0].score;
 
+
 const sku = best["Variant SKU"] || "N/A";
+
 
 const price = best["Variant Price"]
     ? "$" + best["Variant Price"]
     : "Contact SS Racetech for pricing";
 
-    let confidence = "";
+
+// ================================
+// SEARCH VARIABLES
+// ================================
+
+const search = query.toLowerCase();
+
+const productTitle = bestTitle.toLowerCase();
 
 
-    if(results[0].score >= 10000){
+const bestSKU = best["Variant SKU"]
+    ? best["Variant SKU"].toLowerCase()
+    : "";
 
-        confidence = "⭐⭐⭐⭐⭐ Excellent Match";
 
-    }
-    else if(results[0].score >= 5000){
 
-        confidence = "⭐⭐⭐⭐ Very Good Match";
+// ================================
+// MATCH CONFIDENCE
+// ================================
 
-    }
-    else if(results[0].score >= 2000){
+let confidence = "";
 
-        confidence = "⭐⭐⭐ Possible Match";
 
-    }
-    else{
+// ================================
+// EXACT SKU MATCH
+// ================================
 
-        confidence = "⭐⭐ Needs More Information";
+if(
+    search === bestSKU
+){
 
-    }
+    confidence = "⭐⭐⭐⭐⭐ Exact Part Match";
+
+}
+
+
+// ================================
+// STARTER APPLICATION MATCH
+// ================================
+
+else if(
+    search.includes("starter") &&
+    productTitle.includes("starter")
+){
+
+    confidence = "⭐⭐⭐⭐⭐ Excellent Application Match";
+
+}
+
+
+// ================================
+// AN FITTING MATCH
+// ================================
+
+else if(
+    search.match(/-3an|-4an|-6an|-8an|-10an|-12an|-16an|-20an/) &&
+    bestTitle.includes("an")
+){
+
+    confidence = "⭐⭐⭐⭐⭐ Exact Size Match";
+
+}
+
+
+// ================================
+// SCORE FALLBACK
+// ================================
+
+else if(results[0].score >= 10000){
+
+    confidence = "⭐⭐⭐⭐⭐ Excellent Match";
+
+}
+else if(results[0].score >= 5000){
+
+    confidence = "⭐⭐⭐⭐ Very Good Match";
+
+}
+else if(results[0].score >= 2000){
+
+    confidence = "⭐⭐⭐ Possible Match";
+
+}
+else{
+
+    confidence = "⭐⭐ Needs More Information";
+
+}
 
 
 
@@ -165,17 +234,11 @@ WHY WE RECOMMEND IT:
 
 
 
-const search = query.toLowerCase();
-
-
-
 // ================================
 // INTELLIGENT RECOMMENDATION REASONS V3
 // ================================
 
-const productTitle = best && best["Title"]
-    ? best["Title"].toLowerCase()
-    : "";
+
 // ================================
 // SKU SEARCH RESPONSE
 // ================================
@@ -337,11 +400,12 @@ results.slice(0,3).forEach((item,index)=>{
     }
 
 
-
+console.log("CARD CONFIDENCE:", confidence);
     productCards += ssrCreateProductCard(
-        item.product,
-        item.score
-    );
+    item.product,
+    item.score,
+    confidence
+);
 
 
 });
@@ -362,8 +426,10 @@ function ssrScoreProduct(product, query){
     let score = 0;
 
     const title = (
-    product["Title"] || ""
-).toLowerCase();
+        product["Title"] || ""
+    ).toLowerCase();
+
+    const search = query.toLowerCase();
 
 
 const sku = (
@@ -371,7 +437,7 @@ const sku = (
 ).toLowerCase();
 
 
-const search = query.toLowerCase();
+
 // ================================
 // EXACT SKU MATCH INTELLIGENCE V1
 // ================================

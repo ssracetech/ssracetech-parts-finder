@@ -3,7 +3,7 @@
 // ================================
 
 
-function ssrCreateProductCard(product, score){
+function ssrCreateProductCard(product, score, confidence){
 
 
     const title = product["Title"] || "Product";
@@ -67,7 +67,7 @@ ${title}
 
 <p>
 <strong>MATCH:</strong><br>
-⭐⭐⭐⭐⭐ Excellent Match
+${confidence || "⭐⭐⭐⭐⭐ Excellent Match"}
 </p>
 
 
