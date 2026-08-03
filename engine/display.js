@@ -1,5 +1,5 @@
 // ================================
-// SSRACETECH PRODUCT DISPLAY V1
+// SSRACETECH PRODUCT DISPLAY V2
 // ================================
 
 
@@ -38,6 +38,7 @@ ${image ? `
 <img 
 src="${image}" 
 class="product-image"
+alt="${title}"
 >
 ` : ""}
 
@@ -48,14 +49,17 @@ ${title}
 </h3>
 
 
+
 <p>
 <strong>SKU:</strong> ${sku}
 </p>
 
 
+
 <p>
 <strong>PRICE:</strong> ${price}
 </p>
+
 
 
 <p>
@@ -64,13 +68,29 @@ ${title}
 </p>
 
 
+
+<p class="product-description">
+
+🏁 Recommended from SS Racetech performance range.
+
+<br><br>
+
+✅ Application matched<br>
+✅ Performance automotive component<br>
+✅ Ready to purchase
+
+</p>
+
+
+
 <a 
 href="${url}"
 target="_blank"
 class="product-button"
 >
-VIEW PRODUCT
+🛒 BUY NOW
 </a>
+
 
 
 </div>
