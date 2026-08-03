@@ -376,6 +376,73 @@ results.slice(0,3).forEach((item,index)=>{
 });
 
 
+// ================================
+// V5 CLEAN PRODUCT RESULTS
+// ================================
+
+let productCards = "";
+
+
+results.slice(0,3).forEach((item,index)=>{
+
+
+    if(index === 0){
+
+        productCards += `
+        
+<div class="result-heading">
+
+🏆 TOP MATCH
+
+</div>
+
+`;
+
+    }
+
+
+    if(index === 1){
+
+        productCards += `
+        
+<div class="result-heading">
+
+🥈 ALTERNATIVE OPTION
+
+</div>
+
+`;
+
+    }
+
+
+    if(index === 2){
+
+        productCards += `
+        
+<div class="result-heading">
+
+🥉 ANOTHER OPTION
+
+</div>
+
+`;
+
+    }
+
+
+
+    productCards += ssrCreateProductCard(
+        item.product,
+        item.score
+    );
+
+
+});
+
+
+
+return response + productCards;
 
 return response + productCards;
 
