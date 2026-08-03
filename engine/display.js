@@ -1,5 +1,5 @@
 // ================================
-// SSRACETECH PRODUCT DISPLAY V2
+// SSRACETECH PRODUCT DISPLAY V3
 // ================================
 
 
@@ -31,15 +31,18 @@ function ssrCreateProductCard(product, score){
 
     return `
 
+
 <div class="product-card">
 
 
 ${image ? `
+
 <img 
 src="${image}" 
 class="product-image"
 alt="${title}"
 >
+
 ` : ""}
 
 
@@ -65,20 +68,6 @@ ${title}
 <p>
 <strong>MATCH:</strong><br>
 ⭐⭐⭐⭐⭐ Excellent Match
-</p>
-
-
-
-<p class="product-description">
-
-🏁 Recommended from SS Racetech performance range.
-
-<br><br>
-
-✅ Application matched<br>
-✅ Performance automotive component<br>
-✅ Ready to purchase
-
 </p>
 
 
