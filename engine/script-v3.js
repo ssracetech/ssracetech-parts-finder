@@ -71,7 +71,16 @@ Try adding:
 
 
 
-    const best = results[0].product;
+    // ================================
+// V4 TOP 3 RECOMMENDATIONS
+// ================================
+
+const topResults = results.slice(0,3);
+
+const best = topResults[0].product;
+
+const bestScore = results[0].score;
+
 const sku = best["Variant SKU"] || "N/A";
 
 const price = best["Variant Price"]
@@ -169,9 +178,15 @@ else if(
     search.includes("manifold")
 ){
 
+
+    // LS3 REQUEST
+
     if(
-        productTitle.includes("ls3") ||
-        productTitle.includes("l92")
+        search.includes("ls3") &&
+        (
+            productTitle.includes("ls3") ||
+            productTitle.includes("l92")
+        )
     ){
 
         response += `
@@ -182,17 +197,53 @@ else if(
 
     }
 
+
+    // LS2 REQUEST
+
     else if(
+        search.includes("ls2") &&
+        productTitle.includes("ls2")
+    ){
+
+        response += `
+✅ LS2 intake application match
+✅ Cathedral port LS performance manifold
+✅ Suitable for street and race engine builds
+`;
+
+    }
+
+
+    // LS1 REQUEST
+
+    else if(
+        search.includes("ls1") &&
         productTitle.includes("ls1")
     ){
 
         response += `
 ✅ LS1 intake application match
-✅ Performance airflow upgrade component
+✅ Cathedral port LS performance manifold
 ✅ Suitable for street and race engine builds
 `;
 
     }
+
+
+    // Generic LS fallback
+
+    else if(
+        productTitle.includes("ls")
+    ){
+
+        response += `
+✅ LS performance intake manifold
+✅ Designed for improved airflow
+✅ Suitable for performance engine applications
+`;
+
+    }
+
 
     else{
 
@@ -218,8 +269,8 @@ else if(
 ){
 
     response += `
-✅ Correct AN size match
-✅ Correct hose end style and angle
+✅ Correct AN fitting category match
+✅ Correct hose end / fitting style selection
 ✅ Suitable for performance plumbing applications
 `;
 
@@ -229,8 +280,7 @@ else if(
 // ================================
 // TRANSMISSION COOLERS
 // ================================
-
-else if(
+if(
     search.includes("cooler") ||
     search.includes("transmission")
 ){
@@ -271,7 +321,63 @@ I can also help check:
 `;
 
 
-return response;
+response = response.replace(/\n/g,"<br>");
+
+// ================================
+// V4 TOP 3 PRODUCT RESULTS
+// ================================
+
+let productCards = "";
+
+
+results.slice(0,3).forEach((item,index)=>{
+
+
+    if(index === 0){
+
+        productCards += `
+        
+🏆 TOP MATCH
+
+`;
+
+    }
+
+
+    if(index === 1){
+
+        productCards += `
+        
+🥈 ALTERNATIVE OPTION
+
+`;
+
+    }
+
+
+    if(index === 2){
+
+        productCards += `
+        
+🥉 ANOTHER OPTION
+
+`;
+
+    }
+
+
+
+    productCards += ssrCreateProductCard(
+        item.product,
+        item.score
+    );
+
+
+});
+
+
+
+return response + productCards;
 
 }
 
@@ -330,43 +436,217 @@ if(search.includes("starter")){
 
 
 // ================================
-// LS1 STARTER INTELLIGENCE V2
+// STARTER MOTOR INTELLIGENCE V5
 // ================================
 
-if(
-    search.includes("ls1") &&
-    search.includes("starter")
-){
+if(search.includes("starter")){
 
 
-    // Strong LS1 starter match
+    // Must actually be a starter
 
     if(
-        title.includes("ls1") &&
-        title.includes("starter")
-    ){
-
-        score += 15000;
-
-    }
-
-
-    // Accept LS2/LS1 shared starters
-
-    if(
-        title.includes("ls1/ls2") ||
-        title.includes("ls1 ls2") ||
-        title.includes("ls1/ls2")
+        title.includes("starter") ||
+        title.includes("starter motor")
     ){
 
         score += 10000;
 
     }
+    else{
+
+        score -= 50000;
+
+    }
 
 
-    // Holden LS1 applications
+
+    // Remove unrelated products
 
     if(
+        title.includes("water pump") ||
+        title.includes("pulley") ||
+        title.includes("gasket") ||
+        title.includes("alternator") ||
+        title.includes("bracket") ||
+        title.includes("sensor") ||
+        title.includes("bolt") ||
+        title.includes("stud")
+    ){
+
+        score -= 50000;
+
+    }
+
+
+
+// ================================
+// LS STARTER LOCK
+// ================================
+
+if(
+    search.includes("ls1") ||
+    search.includes("ls2") ||
+    search.includes("ls3") ||
+    search.includes("lsx")
+){
+
+    if(
+        title.includes("ls1") ||
+        title.includes("ls2") ||
+        title.includes("ls3") ||
+        title.includes("lsx")
+    ){
+
+        score += 25000;
+
+    }
+
+
+    if(
+        title.includes("chevrolet") ||
+        title.includes("chevy") ||
+        title.includes("gm")
+    ){
+
+        score += 8000;
+
+    }
+
+
+    if(
+        title.includes("ford") ||
+        title.includes("windsor") ||
+        title.includes("cleveland") ||
+        title.includes("289") ||
+        title.includes("302") ||
+        title.includes("351")
+    ){
+
+        score -= 40000;
+
+    }
+
+
+    if(
+        title.includes("253") ||
+        title.includes("308") ||
+        title.includes("304") ||
+        title.includes("commodore") ||
+        title.includes("torana")
+    ){
+
+        score -= 30000;
+
+    }
+
+}
+
+
+
+// ================================
+// HOLDEN STARTER LOCK
+// ================================
+
+if(
+    search.includes("holden") ||
+    search.includes("308") ||
+    search.includes("253") ||
+    search.includes("304") ||
+    search.includes("commodore") ||
+    search.includes("torana")
+){
+
+
+    if(
+        title.includes("holden") ||
+        title.includes("commodore") ||
+        title.includes("torana") ||
+        title.includes("253") ||
+        title.includes("308") ||
+        title.includes("304")
+    ){
+
+        score += 30000;
+
+    }
+
+
+    if(
+        title.includes("ford") ||
+        title.includes("falcon") ||
+        title.includes("windsor") ||
+        title.includes("cleveland") ||
+        title.includes("289") ||
+        title.includes("302") ||
+        title.includes("351")
+    ){
+
+        score -= 50000;
+
+    }
+
+}
+
+
+
+// ================================
+// FORD STARTER LOCK
+// ================================
+
+if(
+    search.includes("ford") ||
+    search.includes("falcon") ||
+    search.includes("289") ||
+    search.includes("302") ||
+    search.includes("351")
+){
+
+
+    if(
+        title.includes("ford") ||
+        title.includes("falcon") ||
+        title.includes("windsor") ||
+        title.includes("cleveland") ||
+        title.includes("289") ||
+        title.includes("302") ||
+        title.includes("351")
+    ){
+
+        score += 30000;
+
+    }
+
+
+    if(
+        title.includes("holden") ||
+        title.includes("commodore") ||
+        title.includes("torana") ||
+        title.includes("308")
+    ){
+
+        score -= 50000;
+
+    }
+
+}
+
+
+
+// ================================
+// GENERIC STARTER SEARCH
+// ================================
+
+if(
+    search === "starter" ||
+    search === "starter motor"
+){
+
+    // Prefer common performance starters
+
+    if(
+        title.includes("ls1") ||
+        title.includes("ls2") ||
+        title.includes("chevrolet") ||
         title.includes("holden") ||
         title.includes("commodore")
     ){
@@ -376,36 +656,58 @@ if(
     }
 
 
-    // Prefer LS1 over LS2 only products
+    // Stop Ford random win
 
     if(
-        title.includes("ls2") &&
-        !title.includes("ls1")
+        title.includes("289") ||
+        title.includes("302") ||
+        title.includes("351") ||
+        title.includes("windsor") ||
+        title.includes("cleveland")
     ){
 
         score -= 5000;
 
     }
 
+}
 
-    // Remove wrong starter families
+}
+
+if(
+    search.includes("ls1") &&
+    search.includes("starter")
+){
 
     if(
-        title.includes("ford") ||
-        title.includes("falcon") ||
-        title.includes("windsor") ||
-        title.includes("chevrolet v8") ||
-        title.includes("small block")
+        title.includes("ls1")
     ){
 
-        score -= 10000;
+        score += 10000;
 
     }
 
 
+    if(
+        title.includes("ls2")
+    ){
+
+        score += 8000;
+
+    }
+
+
+    if(
+        title.includes("chevrolet v8") &&
+        !title.includes("ls1") &&
+        !title.includes("ls2")
+    ){
+
+        score -= 3000;
+
+    }
+
 }
-
-
 // ================================
 // SPEEDFLOW AN FITTING INTELLIGENCE V1
 // ================================
@@ -1060,80 +1362,135 @@ if(
         !title.includes("manifold")
     ){
 
+        score -= 30000;
+
+    }
+
+
+    // Remove obvious wrong categories
+
+    if(
+        title.includes("water pump") ||
+        title.includes("starter") ||
+        title.includes("cooler") ||
+        title.includes("fitting") ||
+        title.includes("hose")
+    ){
+
+        score -= 50000;
+
+    }
+
+} // CLOSE INTAKE MANIFOLD INTELLIGENCE
+
+
+
+// ================================
+// LS FAMILY MATCHING V3
+// ================================
+
+
+if(
+    search.includes("ls1")
+){
+
+    if(title.includes("ls1")){
+        score += 10000;
+    }
+
+
+    // Shared LS1/LS2 products are acceptable
+
+    if(
+        title.includes("ls2") &&
+        title.includes("ls1")
+    ){
+
+        score += 3000;
+
+    }
+
+
+    if(title.includes("ls3")){
         score -= 10000;
+    }
 
+}
+
+
+
+if(
+    search.includes("ls2")
+){
+
+    if(title.includes("ls2")){
+        score += 10000;
     }
 
 
-
-    // ================================
-    // LS FAMILY MATCHING
-    // ================================
+    // Shared LS1/LS2 products
 
     if(
-        search.includes("ls1") ||
-        search.includes("ls2") ||
-        search.includes("ls3") ||
-        search.includes("lsx")
+        title.includes("ls1") &&
+        title.includes("ls2")
     ){
 
-
-        if(
-            title.includes("ls1") ||
-            title.includes("ls2") ||
-            title.includes("ls3") ||
-            title.includes("lsx") ||
-            title.includes("l92")
-        ){
-
-            score += 5000;
-
-        }
-
-
-        // Wrong engine families
-
-        if(
-            title.includes("small block") ||
-            title.includes("big block") ||
-            title.includes("sbc") ||
-            title.includes("bbc")
-        ){
-
-            score -= 5000;
-
-        }
-
-    }
-
-} // CLOSE LS FAMILY MATCHING
-
-
-
-// ================================
-// LS3 / L92 SPECIFIC V2
-// ================================
-
-if(search.includes("ls3")){
-
-
-    // Must actually be an intake product
-
-    if(
-        title.includes("intake") ||
-        title.includes("manifold")
-    ){
-
-        score += 8000;
+        score += 3000;
 
     }
 
 
-    // LS3 / L92 match
+    if(title.includes("ls3")){
+        score -= 10000;
+    }
+
+}
+
+
+
+if(
+    search.includes("ls3")
+){
 
     if(
         title.includes("ls3") ||
         title.includes("l92")
+    ){
+
+        score += 12000;
+
+    }
+
+
+    if(title.includes("ls1")){
+        score -= 10000;
+    }
+
+
+    if(title.includes("ls2")){
+        score -= 8000;
+    }
+
+
+}
+
+
+
+// ================================
+// CATHEDRAL PORT INTELLIGENCE V3
+// ================================
+
+
+if(
+    search.includes("cathedral") ||
+    search.includes("cathedral port")
+){
+
+    if(
+        title.includes("cathedral") ||
+        title.includes("ls1") ||
+        title.includes("ls2") ||
+        title.includes("ls6")
     ){
 
         score += 5000;
@@ -1141,7 +1498,29 @@ if(search.includes("ls3")){
     }
 
 
-    // 102mm throttle body bonus
+    if(
+        title.includes("oval port") ||
+        title.includes("big block") ||
+        title.includes("bbc") ||
+        title.includes("small block") ||
+        title.includes("sbc")
+    ){
+
+        score -= 15000;
+
+    }
+
+}
+
+
+
+// ================================
+// LS3 FEATURE BONUS
+// ================================
+
+
+if(search.includes("ls3")){
+
 
     if(title.includes("102mm")){
 
@@ -1150,7 +1529,7 @@ if(search.includes("ls3")){
     }
 
 
-} // CLOSE LS3 / L92 SPECIFIC V2
+}
 
 
 
@@ -1190,20 +1569,73 @@ if(
 
 
 // ================================
-// LS1 SPECIFIC
+// LS1 SPECIFIC V2
 // ================================
 
-    if(search.includes("ls1")){
+if(search.includes("ls1")){
 
 
-        if(title.includes("ls1")){
+    if(title.includes("ls1")){
 
-            score += 8000;
+        score += 8000;
+
+    }
+
+
+    // LS generic intake fallback
+
+    if(
+        title.includes("ls intake") &&
+        !title.includes("ls1")
+    ){
+
+        score += 3000;
+
+    }
+
+
+    // Wrong engine family penalty
+
+    if(
+        title.includes("253") ||
+        title.includes("308") ||
+        title.includes("holden v8") ||
+        title.includes("cleveland") ||
+        title.includes("windsor")
+    ){
+
+        score -= 15000;
+
+    }
+
+
+    // LS1 cathedral port preference
+
+    if(
+        search.includes("intake")
+    ){
+
+        if(
+            title.includes("cathedral")
+        ){
+
+            score += 4000;
 
         }
 
 
+        if(
+            title.includes("tunnel ram")
+        ){
+
+            score -= 2000;
+
+        }
+
     }
+
+
+}
 
 
 
@@ -1301,9 +1733,7 @@ if(
     }
 
 
-    // ================================
     // STRICT LS3 INTAKE FINAL LOCK
-    // ================================
 
     if(
         search.includes("intake") ||
@@ -1329,9 +1759,13 @@ if(
     }
 
 
-}
+} // CLOSE LS3 SEARCH
 
 
+
+// ================================
+// LS2 SPECIFIC V3
+// ================================
 
 if(
     search.includes("ls2")
@@ -1356,6 +1790,26 @@ if(
     ){
 
         score += 5000;
+
+    }
+
+
+    // LS2 wrong engine family lock
+
+    if(
+        title.includes("ford") ||
+        title.includes("289") ||
+        title.includes("302") ||
+        title.includes("302w") ||
+        title.includes("351") ||
+        title.includes("windsor") ||
+        title.includes("cleveland") ||
+        title.includes("small block") ||
+        title.includes("sbc") ||
+        title.includes("bbc")
+    ){
+
+        score -= 30000;
 
     }
 
@@ -1403,6 +1857,8 @@ return score;
 
 window.ssrSearch = ssrSearch;
 window.ssrBuildResponse = ssrBuildResponse;
+
+
 // ================================
 // CHAT CONNECTOR V3
 // ================================
@@ -1413,46 +1869,28 @@ function sendMessage(){
 
     const message = input.value.trim();
 
-
     if(!message){
         return;
     }
 
-
-    console.log(
-        "USER QUERY:",
-        message
-    );
-
+    console.log("USER QUERY:", message);
 
     const reply = ssrBuildResponse(message);
 
-
     const chat = document.getElementById("messages");
 
-
     chat.innerHTML += `
+        <div class="user-message">
+            ${message}
+        </div>
 
-<div class="user-message">
+        <div class="bot-message">
+            ${reply}
+        </div>
+    `;
 
-${message}
-
-</div>
-
-
-<div class="bot-message">
-
-${reply.replace(/\n/g,"<br>")}
-
-</div>
-
-`;
-
+    chat.scrollTop = chat.scrollHeight;
 
     input.value = "";
 
 }
-
-
-
-window.sendMessage = sendMessage;
