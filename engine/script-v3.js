@@ -115,24 +115,9 @@ const price = best["Variant Price"]
 
     let response = `
 
-🏁 I found this match for you:
+🏁 I found these matches that best fit your search.
 
-⭐ ${best["Title"]}
-
-
-SKU:
-
-${sku}
-
-
-PRICE:
-
-${price}
-
-
-MATCH CONFIDENCE:
-
-${confidence}
+The closest match appears first.
 
 
 WHY WE RECOMMEND IT:
