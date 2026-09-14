@@ -1,4 +1,4 @@
-﻿// ======================================
+// ======================================
 // SSRACETECH V6 MASTER ENGINE
 // CLEAN FOUNDATION
 // ======================================
@@ -86,7 +86,8 @@ const isANAdapterConversion =
 if (
     search.includes("hose end") ||
     search.includes("hose-end") ||
-    search.includes("hoseend")
+    search.includes("hoseend") ||
+    search.includes("hose tail")
 ) {
 
     intent.category = "hose_end";
@@ -543,7 +544,9 @@ if (
     !intent.category &&
     (
         search.includes("fitting") ||
-        search.includes("fittings")
+        search.includes("fittings") ||
+        search.includes("y block") ||
+        search.includes("y-block")
     )
 ) {
 
@@ -1592,7 +1595,8 @@ if (
 
 if (
     search.includes("hose end") ||
-    search.includes("hoseend")
+    search.includes("hoseend") ||
+    search.includes("hose tail")
 ) {
 
     intent.fittingType = "hose_end";
@@ -2835,6 +2839,7 @@ function ssrScoreProductV6(product, intent) {
     // ==================================
     // PRODUCT DATA
     // ==================================
+
 
     const productType =
         String(
@@ -12148,6 +12153,26 @@ if (
                         ""
                     ).toLowerCase();
 
+                // ==================================
+                // EXPLICIT Y-BLOCK QUERY
+                // ==================================
+
+                if (
+                    intent.raw.includes("y block") ||
+                    intent.raw.includes("y-block")
+                ) {
+
+                    const isYBlock =
+                        title.includes("y block") ||
+                        title.includes("y-block");
+
+                    if (!isYBlock) {
+                        return false;
+                    }
+
+                }
+
+
 
                 // ==================================
 // REQUESTED AN SIZE
@@ -12260,6 +12285,14 @@ if (
     title.includes("t-piece") ||
     title.includes("t piece") ||
     title.includes("union") ||
+    (
+        title.includes("y-block") ||
+        title.includes("y block")
+    ) &&
+    !(
+        intent.raw.includes("y block") ||
+        intent.raw.includes("y-block")
+    ) ||
     title.includes("adapter") ||
     title.includes("adaptor") ||
     title.includes("elbow") ||
@@ -13477,6 +13510,9 @@ function ssrSimpleBridgeSearch(
 
     return candidates.slice(0, limit);
 }
+
+
+
 
 
 
