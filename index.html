@@ -1,71 +1,310 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>SS Racetech Parts Finder</title>
+    <title>SS Racetech AI Parts Finder</title>
 
     <link rel="stylesheet" href="style.css">
 
 </head>
 
+
 <body>
 
-<div class="container">
+    <main class="app-shell">
 
-    <h1>🏁 SS RACETECH</h1>
 
-    <h2>AI Parts Finder</h2>
+        <!-- ================================= -->
+        <!-- HEADER -->
+        <!-- ================================= -->
 
-    <p>
-        Ask me anything about Speedflow, Proflow, LS, fittings,
-        transmission parts and more.
-    </p>
+        <header class="app-header">
 
-    <div class="chat-box">
+            <div class="brand">
 
-        <div id="messages">
+                <div class="brand-mark">
+                    &#127937;
+                </div>
 
-            <div class="bot">
-                👋 Hi! I'm the SS Racetech Parts Finder.
-                <br><br>
-                Try asking:
-                <br>
-                • I need a -6AN fitting
-                <br>
-                • LS1 starter motor
-                <br>
-                • Transmission cooler
+                <div>
+
+                    <div class="brand-name">
+                        SS RACETECH
+                    </div>
+
+                    <div class="brand-subtitle">
+                        AI PARTS FINDER
+                    </div>
+
+                </div>
+
             </div>
 
-        </div>
 
-        <div class="input-area">
+            <div class="ai-status">
 
-            <input
-                type="text"
-                id="userInput"
-                placeholder="Ask me anything..."
-            >
+                <span class="status-dot"></span>
 
-            <button id="sendBtn" onclick="sendMessage()">
-    Send
-</button>
+                <span>
+                    AI ONLINE
+                </span>
 
-        </div>
+            </div>
 
-    </div>
+        </header>
 
-</div>
 
-<script src="engine/loader.js"></script>
-<script src="engine/intent.js"></script>
-<script src="engine/display.js"></script>
-<script src="engine/script-v3.js"></script>
+        <!-- ================================= -->
+        <!-- CHAT PANEL -->
+        <!-- ================================= -->
+
+        <section class="chat-panel">
+
+
+            <!-- CHAT HEADER -->
+
+            <div class="chat-header">
+
+                <div class="assistant-avatar">
+                    &#129302;
+                </div>
+
+                <div class="assistant-info">
+
+                    <strong>
+                        SS Racetech AI
+                    </strong>
+
+                    <span>
+                        Your parts & fitting assistant
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- MESSAGES -->
+            <!-- ================================= -->
+
+            <div id="messages" class="messages">
+
+
+                <!-- WELCOME MESSAGE -->
+
+                <div class="message-row bot-row">
+
+                    <div class="bot-avatar">
+                        &#129302;
+                    </div>
+
+                    <div class="bot message-bubble">
+
+                        <div class="message-label">
+                            SS RACETECH AI
+                        </div>
+
+                        <div class="welcome-title">
+                            What are we building?
+                        </div>
+
+                        <p>
+                            Tell me what you're trying to put
+                            together and I'll help you find the
+                            right parts.
+                        </p>
+
+                        <div class="quick-prompts">
+
+                            <button
+                                type="button"
+                                onclick="quickAsk('I need a -6AN fitting')"
+                            >
+                                -6AN fitting
+                            </button>
+
+                            <button
+                                type="button"
+                                onclick="quickAsk('LS1 starter motor')"
+                            >
+                                LS1 starter
+                            </button>
+
+                            <button
+                                type="button"
+                                onclick="quickAsk('Transmission cooler')"
+                            >
+                                Transmission cooler
+                            </button>
+
+                            <button
+                                type="button"
+                                onclick="quickAsk('What do I need to put a -3 fuel line together?')"
+                            >
+                                Build a -3 fuel line
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- INPUT -->
+            <!-- ================================= -->
+
+            <div class="input-section">
+
+                <div class="input-wrapper">
+
+                    <input
+                        type="text"
+                        id="userInput"
+                        autocomplete="off"
+                        placeholder="Ask me what you need..."
+                    >
+
+                    <button
+                        id="sendBtn"
+                        type="button"
+                        onclick="sendMessage()"
+                    >
+                        <span>SEARCH</span>
+                        <span class="send-arrow">&#8594;</span>
+                    </button>
+
+                </div>
+
+                <div class="input-hint">
+                    Try a size, fitting, engine, vehicle or part.
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ================================= -->
+        <!-- FOOTER -->
+        <!-- ================================= -->
+
+        <footer class="app-footer">
+
+            <span>
+                SS RACETECH
+            </span>
+
+            <span class="footer-divider">
+                •
+            </span>
+
+            <span>
+                PARTS INTELLIGENCE
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+    <!-- ====================================== -->
+    <!-- PRODUCT DATABASE -->
+    <!-- ====================================== -->
+
+    <script src="engine/loader.js"></script>
+
+
+    <!-- ====================================== -->
+    <!-- V6 SEARCH ENGINE -->
+    <!-- ====================================== -->
+
+    <script src="engine/script-v6.js?v=20260910"></script>
+
+
+    <!-- ====================================== -->
+    <!-- QUICK PROMPTS -->
+    <!-- ====================================== -->
+
+    <script>
+
+        function quickAsk(query) {
+
+            const input =
+                document.getElementById(
+                    "userInput"
+                );
+
+            if (!input) {
+                return;
+            }
+
+            input.value = query;
+
+            sendMessage();
+
+        }
+
+
+        // ENTER KEY
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const input =
+                    document.getElementById(
+                        "userInput"
+                    );
+
+                if (!input) {
+                    return;
+                }
+
+                input.addEventListener(
+                    "keydown",
+                    function (event) {
+
+                        if (
+                            event.key === "Enter"
+                        ) {
+
+                            event.preventDefault();
+
+                            sendMessage();
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
 
 </body>
 
 </html>
+
+
+
+
+
+
+

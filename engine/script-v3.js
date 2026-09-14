@@ -178,7 +178,28 @@ else if(
     confidence = "⭐⭐⭐⭐⭐ Excellent Application Match";
 
 }
+// ================================
+// AIR INTAKE / BEND APPLICATION MATCH
+// ================================
 
+else if(
+    (
+        search.includes("bend") ||
+        search.includes("elbow") ||
+        search.includes("silicone") ||
+        search.includes("intercooler")
+    )
+    &&
+    (
+        bestTitle.includes("elbow") ||
+        bestTitle.includes("silicone") ||
+        bestTitle.includes("bend")
+    )
+){
+
+    confidence = "⭐⭐⭐⭐⭐ Correct Application Match";
+
+}
 
 // ================================
 // AN FITTING MATCH
@@ -263,12 +284,32 @@ if(
 // ================================
 
 
-else if(search.includes("starter")){
+if(
+    search.includes("starter")
+){
 
     response += `
 ✅ Correct starter motor application match
 ✅ High torque gear reduction design
 ✅ Reliable cranking performance for modified engines
+`;
+
+}
+
+
+else if(
+    search.includes("bend") ||
+    search.includes("elbow") ||
+    search.includes("silicone") ||
+    search.includes("aluminium") ||
+    search.includes("aluminum") ||
+    search.includes("intercooler")
+){
+
+    response += `
+✅ Correct intake pipe / bend category match
+✅ Correct angle and tubing application selection
+✅ Suitable for intercooler and intake fabrication
 `;
 
 }
@@ -328,6 +369,9 @@ else{
 }
 
 
+// ================================
+// CUSTOMER ASSISTANCE MESSAGE
+// ================================
 
 response += `
 
@@ -340,9 +384,9 @@ I can also help check:
 `;
 
 
+
 response = response.replace(/\n/g,"<br>");
 
-;
 
 
 // ================================
@@ -422,14 +466,24 @@ window.ssrBuildResponse = ssrBuildResponse;
 // ================================
 
 function ssrScoreProduct(product, query){
-
+console.log("⭐⭐⭐ NEW BUILD LOADED ⭐⭐⭐");
     let score = 0;
 
     const title = (
-        product["Title"] || ""
-    ).toLowerCase();
+    product["Title"] || ""
+).toLowerCase();
 
-    const search = query.toLowerCase();
+const search = query.toLowerCase();
+if(title.includes("silicone bend")){
+
+    console.log(
+        "🔥 FOUND SILICONE PRODUCT:",
+        title
+    );
+
+}
+console.log("DEBUG TITLE:", title);
+console.log("DEBUG SEARCH:", search);
 
 
 const sku = (
@@ -738,7 +792,6 @@ if(
 
 }
 
-}
 
 if(
     search.includes("ls1") &&
@@ -1114,6 +1167,396 @@ if(search.includes("hose end")){
         score += 3000;
 
     }
+
+} // CLOSE HOSE END PRODUCT FILTER V2
+// ================================
+// AIR INTAKE INTELLIGENCE V2
+// ================================
+
+if(
+    search.includes("silicone") ||
+    search.includes("aluminium") ||
+    search.includes("aluminum") ||
+    search.includes("intercooler") ||
+    search.includes("elbow") ||
+    search.includes("bend") ||
+    search.includes("reducer") ||
+    search.includes("coupler")
+){
+
+    // ----------------------------
+    // MATERIAL
+    // ----------------------------
+
+    if(search.includes("silicone")){
+
+        if(title.includes("silicone")){
+            score += 12000;
+        }
+
+        if(
+            title.includes("aluminium") ||
+            title.includes("aluminum") ||
+            title.includes("cast")
+        ){
+            score -= 15000;
+        }
+
+    }
+
+    if(
+        search.includes("aluminium") ||
+        search.includes("aluminum")
+    ){
+
+        if(
+            title.includes("aluminium") ||
+            title.includes("aluminum") ||
+            title.includes("cast")
+        ){
+            score += 12000;
+        }
+
+        if(title.includes("silicone")){
+            score -= 15000;
+        }
+
+    }
+    // ================================
+// SILICONE BEND LOCK V4
+// ================================
+
+if(
+    search.includes("silicone")
+){
+
+    console.log("✅ ENTERED SILICONE BEND LOCK V4");
+
+    // Correct material
+
+    if(title.includes("silicone")){
+
+        score += 50000;
+
+        console.log(
+            "🔥 SILICONE HIT:",
+            title,
+            "CURRENT SCORE:",
+            score
+        );
+
+    }
+
+    // Correct material
+
+    if(
+        title.includes("silicone")
+    ){
+
+        score += 50000;
+
+        console.log(
+            "🔥 SILICONE HIT:",
+            title,
+            "CURRENT SCORE:",
+            score
+        );
+
+    }
+
+
+    // Customer says elbow
+    // Product says bend
+
+    if(
+        title.includes("bend")
+    ){
+
+        score += 40000;
+
+    }
+
+
+    if(
+        search.includes("elbow") &&
+        title.includes("bend")
+    ){
+
+        score += 30000;
+
+    }
+
+
+    // Angle match
+
+    if(
+        search.includes("90") &&
+        title.includes("90 degree")
+    ){
+
+        score += 30000;
+
+    }
+
+
+    // Wrong material penalty
+
+    if(
+        title.includes("aluminium") ||
+        title.includes("aluminum") ||
+        title.includes("al6061")
+    ){
+
+        score -= 150000;
+
+        console.log(
+            "⚠️ ALUMINIUM PENALTY:",
+            title,
+            "CURRENT SCORE:",
+            score
+        );
+
+    }
+
+} 
+// ================================
+// AIR INTAKE SIZE LOCK V6
+// ================================
+
+let requestedSize = null;
+
+
+// Detect requested diameter
+
+if(search.includes("1.5 inch")){
+    requestedSize = "1.5";
+}
+
+else if(search.includes("1.75")){
+    requestedSize = "1.75";
+}
+
+else if(search.includes("2 inch") || search.includes('2"')){
+    requestedSize = "2";
+}
+
+else if(search.includes("2.25")){
+    requestedSize = "2.25";
+}
+
+else if(search.includes("2.5")){
+    requestedSize = "2.5";
+}
+
+else if(search.includes("2.75")){
+    requestedSize = "2.75";
+}
+
+else if(search.includes("3 inch") || search.includes('3"')){
+    requestedSize = "3";
+}
+
+else if(search.includes("3.5")){
+    requestedSize = "3.5";
+}
+
+else if(search.includes("4 inch") || search.includes('4"')){
+    requestedSize = "4";
+}
+
+
+
+if(requestedSize){
+
+
+    // ================================
+// EXACT SIZE MATCH V7
+// ================================
+
+if(
+    title.includes(requestedSize + " inch") ||
+    title.includes(requestedSize + '"') ||
+    title.includes(requestedSize + "in") ||
+    title.includes(" " + requestedSize + " ")
+){
+
+    score += 100000;
+
+
+    console.log(
+        "📏 SIZE MATCH:",
+        requestedSize,
+        title,
+        score
+    );
+
+}
+
+
+
+    // WRONG SIZE PENALTY
+
+    const wrongSizes = [
+        "1.5",
+        "1.75",
+        "2",
+        "2.25",
+        "2.5",
+        "2.75",
+        "3",
+        "3.5",
+        "4"
+    ];
+
+
+    wrongSizes.forEach(size=>{
+
+
+        if(size !== requestedSize){
+
+
+            if(
+                title.includes(size + " inch") ||
+                title.includes(size + '"') ||
+                title.includes(size + "in")
+            ){
+
+                score -= 50000;
+
+            }
+
+        }
+
+    });
+
+
+}
+console.log(
+    "📐 SIZE CHECK:",
+    "Requested:",
+    requestedSize,
+    "Title:",
+    title,
+    "Score:",
+    score
+);
+// ================================
+// CUSTOMER WORD ELBOW = PRODUCT BEND
+// ================================
+
+if(
+    search.includes("elbow") &&
+    title.includes("bend")
+){
+
+    score += 40000;
+
+}
+
+
+if(
+    search.includes("90 degree") &&
+    title.includes("90 degree")
+){
+
+    score += 30000;
+
+}
+
+
+if(
+    search.includes("silicone") &&
+    title.includes("silicone bend")
+){
+
+    score += 40000;
+
+}
+    // ----------------------------
+// ELBOW / BEND
+// ----------------------------
+
+if(
+    search.includes("elbow") ||
+    search.includes("bend")
+){
+
+    if(
+        title.includes("elbow") ||
+        title.includes("bend")
+    ){
+
+        score += 12000;
+
+    }
+
+
+    if(title.includes("straight")){
+
+        score -= 15000;
+
+    }
+
+}
+// ================================
+// ELBOW / BEND SYNONYM MATCH
+// ================================
+
+if(
+    search.includes("elbow")
+){
+
+    if(title.includes("bend")){
+        score += 15000;
+    }
+
+}
+
+
+if(
+    search.includes("bend")
+){
+
+    if(title.includes("elbow")){
+        score += 15000;
+    }
+
+}
+
+    // ----------------------------
+    // REDUCER
+    // ----------------------------
+
+    if(search.includes("reducer")){
+
+        if(title.includes("reducer")){
+            score += 12000;
+        }
+
+    }
+    else{
+
+        if(title.includes("reducer")){
+            score -= 8000;
+        }
+
+    }
+
+
+    // ----------------------------
+    // COUPLER
+    // ----------------------------
+
+    if(search.includes("coupler")){
+
+        if(title.includes("coupler")){
+            score += 8000;
+        }
+
+    }
+
+}
+
 // ================================
 // TRANSMISSION FAMILY INTELLIGENCE V2
 // ================================
@@ -1236,6 +1679,23 @@ if(search.includes("45")){
     }
 
 }
+// ================================
+// AIR INTAKE / SILICONE / ALUMINIUM BENDS
+// ================================
+
+else if(
+    search.includes("bend") ||
+    search.includes("elbow") ||
+    search.includes("silicone") ||
+    search.includes("intercooler") ||
+    search.includes("aluminium") ||
+    search.includes("aluminum")
+){
+
+
+
+}
+
 // ================================
 // TRANSMISSION COOLER INTELLIGENCE V1
 // ================================
@@ -1911,7 +2371,25 @@ if(
 
 } // CLOSE LS1 SEARCH
 
+if(title.includes("silicone bend")){
 
+    console.log(
+        "🏆 FINAL SILICONE SCORE:",
+        title,
+        score
+    );
+
+}
+
+if(title.includes("al6061")){
+
+    console.log(
+        "⚠️ ALUMINIUM SCORE:",
+        title,
+        score
+    );
+
+}
 // ================================
 // FINAL SCORE RETURN
 // ================================

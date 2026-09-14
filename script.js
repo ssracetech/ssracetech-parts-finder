@@ -1,4 +1,4 @@
-const messages = document.getElementById("messages");
+﻿const messages = document.getElementById("messages");
 const input = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 
@@ -303,7 +303,7 @@ const genericStarterSearch =
 // DETECT DEGREE ANGLES
 // -----------------------------------------------------
 
-const degreeMatch = cleanSearch.match(/\d+\s*degree|\d+\s*°/g) || [];
+const degreeMatch = cleanSearch.match(/\d+\s*degree|\d+\s*Â°/g) || [];
 
 
 // -----------------------------------------------------
@@ -1334,7 +1334,7 @@ let reply = "";
 if (search.includes("starter")) {
 
     reply +=
-        "🏁 <strong>I found these starter motors that best match your search.</strong><br>" +
+        "ðŸ <strong>I found these starter motors that best match your search.</strong><br>" +
         "The closest match appears first.<br><br>";
 
 }
@@ -1342,7 +1342,7 @@ if (search.includes("starter")) {
 else if (search.includes("intake")) {
 
     reply +=
-        "🏁 <strong>I found these intake products.</strong><br>" +
+        "ðŸ <strong>I found these intake products.</strong><br>" +
         "The best matching intake manifolds appear first.<br><br>";
 
 }
@@ -1350,7 +1350,7 @@ else if (search.includes("intake")) {
 else if (search.includes("hose end")) {
 
     reply +=
-        "🏁 <strong>I found these hose ends.</strong><br>" +
+        "ðŸ <strong>I found these hose ends.</strong><br>" +
         "Results are ranked by AN size and angle.<br><br>";
 
 }
@@ -1358,7 +1358,7 @@ else if (search.includes("hose end")) {
 else if (search.includes("speedflow")) {
 
     reply +=
-        "🏁 <strong>I found these Speedflow products.</strong><br>" +
+        "ðŸ <strong>I found these Speedflow products.</strong><br>" +
         "Showing the closest matching fittings first.<br><br>";
 
 }
@@ -1366,7 +1366,7 @@ else if (search.includes("speedflow")) {
 else if (search.includes("proflow")) {
 
     reply +=
-        "🏁 <strong>I found these Proflow products.</strong><br>" +
+        "ðŸ <strong>I found these Proflow products.</strong><br>" +
         "Showing the closest matching products first.<br><br>";
 
 }
@@ -1374,7 +1374,7 @@ else if (search.includes("proflow")) {
 else if (search.includes("transmission")) {
 
     reply +=
-        "🏁 <strong>I found these transmission products.</strong><br>" +
+        "ðŸ <strong>I found these transmission products.</strong><br>" +
         "The closest matches are shown first.<br><br>";
 
 }
@@ -1382,7 +1382,7 @@ else if (search.includes("transmission")) {
 else if (search.includes("arp")) {
 
     reply +=
-        "🏁 <strong>I found these ARP products.</strong><br>" +
+        "ðŸ <strong>I found these ARP products.</strong><br>" +
         "Showing the closest matching hardware first.<br><br>";
 
 }
@@ -1390,7 +1390,7 @@ else if (search.includes("arp")) {
 else {
 
     reply +=
-        "🏁 <strong>I found these products that best match your search.</strong><br><br>";
+        "ðŸ <strong>I found these products that best match your search.</strong><br><br>";
 
 }
 
@@ -1477,10 +1477,10 @@ else if (
     applicationReasons.push("LS engine application detected");
     applicationReasons.push("Performance replacement part");
 
-}   // 👈 THIS closing bracket finishes LS starter section
+}   // ðŸ‘ˆ THIS closing bracket finishes LS starter section
 
 
-// 👇 PASTE THE HOLDEN CODE HERE (one blank line underneath is perfect)
+// ðŸ‘‡ PASTE THE HOLDEN CODE HERE (one blank line underneath is perfect)
 
 // Holden V8 Starter Motors
 else if (
@@ -1875,30 +1875,30 @@ else if (
 
 // AI recommendation confidence
 
-let confidence = "⭐⭐⭐⭐⭐ Excellent Match";
+let confidence = "â­â­â­â­â­ Excellent Match";
 
 
 if (best.exactMatch) {
 
-    confidence = "✅ EXACT PART NUMBER MATCH";
+    confidence = "âœ… EXACT PART NUMBER MATCH";
 
 }
 
 else if (results[0].score < 500) {
 
-    confidence = "⭐⭐⭐ Possible Match";
+    confidence = "â­â­â­ Possible Match";
 
 }
 
 else if (results[0].score < 900) {
 
-    confidence = "⭐⭐⭐⭐ Good Match";
+    confidence = "â­â­â­â­ Good Match";
 
 }
 
 if (results[0].score < 800) {
 
-    confidence = "⭐⭐⭐ Possible Match";
+    confidence = "â­â­â­ Possible Match";
 
 }
 
@@ -1907,7 +1907,7 @@ reply += `
 
 <div class="ai-summary">
 
-<strong>⭐ TOP MATCH</strong>
+<strong>â­ TOP MATCH</strong>
 
 <br><br>
 
@@ -1936,8 +1936,8 @@ ${recommendation}
 <br><br>
 
 ${reasons.length
-? reasons.map(r => "✅ " + r).join("<br>")
-: "✅ Product category match<br>✅ Performance application match<br>✅ Catalogue match"}
+? reasons.map(r => "âœ… " + r).join("<br>")
+: "âœ… Product category match<br>âœ… Performance application match<br>âœ… Catalogue match"}
 
 <br><br>
 
@@ -1946,7 +1946,7 @@ ${reasons.length
 <br><br>
 
 ${applicationReasons.length
-? applicationReasons.map(r => "✅ " + r).join("<br>")
+? applicationReasons.map(r => "âœ… " + r).join("<br>")
 : 
 (
     search.includes("silicone") ||
@@ -1956,7 +1956,7 @@ ${applicationReasons.length
 )
 
 ?
-"✅ Intake and fabrication application<br>✅ Performance piping component<br>✅ Suitable for custom automotive builds"
+"âœ… Intake and fabrication application<br>âœ… Performance piping component<br>âœ… Suitable for custom automotive builds"
 
 :
 
@@ -1965,7 +1965,7 @@ ${applicationReasons.length
 )
 
 ?
-"✅ Performance intake upgrade<br>✅ Designed to improve airflow and engine performance"
+"âœ… Performance intake upgrade<br>âœ… Designed to improve airflow and engine performance"
 
 :
 
@@ -1974,11 +1974,11 @@ ${applicationReasons.length
 )
 
 ?
-"✅ Suitable for street and performance engine builds<br>✅ High torque replacement upgrade"
+"âœ… Suitable for street and performance engine builds<br>âœ… High torque replacement upgrade"
 
 :
 
-"✅ Suitable for street and performance automotive applications"
+"âœ… Suitable for street and performance automotive applications"
 
 }
 
@@ -2020,13 +2020,13 @@ reply += `
 
     <br>
 
-    🔧 <strong>${product.Title}</strong><br><br>
+    ðŸ”§ <strong>${product.Title}</strong><br><br>
 
-    🏷️ Part Number: ${partNumber}<br>
+    ðŸ·ï¸ Part Number: ${partNumber}<br>
 
-    💰 Price: $${product["Variant Price"] || "N/A"} AUD<br><br>
+    ðŸ’° Price: $${product["Variant Price"] || "N/A"} AUD<br><br>
 
-    🛒 <a href="https://racereadygear.com.au/products/${product.Handle}" target="_blank">
+    ðŸ›’ <a href="https://racereadygear.com.au/products/${product.Handle}" target="_blank">
         View Product
     </a>
 
@@ -2051,22 +2051,437 @@ return reply;
 
 
 
+function buildV6Reply(searchQuery, results) {
+
+    if (
+        !results ||
+        !results.length
+    ) {
+
+        return null;
+
+    }
+
+
+    // ==========================================
+    // NORMALISE RESULT COUNT
+    // ==========================================
+
+    const count =
+        results.length;
+
+
+    // ==========================================
+    // BUILD REQUEST DISPLAY
+    // ==========================================
+
+    let requestDisplay =
+        searchQuery
+            .replace(/\s+/g, " ")
+            .trim();
+
+
+    // ==========================================
+    // RESPONSE HEADER
+    // ==========================================
+
+    let reply = `
+
+<strong>SS RACETECH AI</strong>
+
+<br><br>
+
+Yep — I found <strong>${count}</strong> matching ${count === 1 ? "part" : "parts"} for you.
+
+<br><br>
+
+Request: <strong>${requestDisplay}</strong>
+
+<br><br>
+
+Here are the closest matches from SS Racetech:
+
+<br><br>
+
+`;
+
+
+    // ==========================================
+    // DISPLAY PRODUCTS
+    // ==========================================
+
+    const displayedProducts = [];
+
+
+    results.forEach((item, index) => {
+
+        const product =
+            item.product ||
+            item;
+
+
+        if (!product) {
+            return;
+        }
+
+
+        const title =
+            product.Title ||
+            "Unknown Product";
+
+
+        // --------------------------------------
+        // REMOVE DUPLICATES
+        // --------------------------------------
+
+        if (
+            displayedProducts.includes(title)
+        ) {
+
+            return;
+
+        }
+
+
+        displayedProducts.push(title);
+
+
+        // --------------------------------------
+        // SKU
+        // --------------------------------------
+
+        const partNumber =
+            product["Variant SKU"]?.trim() ||
+            product["Google Shopping / MPN"]?.trim() ||
+            "N/A";
+
+
+        // --------------------------------------
+        // PRICE
+        // --------------------------------------
+
+        const price =
+            product["Variant Price"] ||
+            "N/A";
+
+
+        // --------------------------------------
+        // PRODUCT HANDLE
+        // --------------------------------------
+
+        const handle =
+            product.Handle ||
+            "";
+
+
+        // --------------------------------------
+        // BEST MATCH
+        // --------------------------------------
+
+        if (index === 0) {
+
+            reply += `
+
+<strong>&#127942; BEST MATCH</strong>
+
+<br><br>
+
+`;
+
+        }
+
+
+        // --------------------------------------
+        // PRODUCT CARD
+        // --------------------------------------
+
+        reply += `
+
+<div class="product-card">
+
+    ${
+        product["Image Src"]
+        ?
+        `<img src="${product["Image Src"]}" width="180">`
+        :
+        ""
+    }
+
+    <br>
+
+    <strong>${title}</strong>
+
+    <br><br>
+
+    SKU: ${partNumber}
+
+    <br><br>
+
+    $${price} AUD
+
+    <br><br>
+
+    ${
+        handle
+        ?
+        `<a href="/products/${handle}" target="_blank">
+            <strong>View Product &#8594;</strong>
+        </a>`
+        :
+        ""
+    }
+
+</div>
+
+<br>
+
+`;
+
+    });
+
+
+    // ==========================================
+    // RETURN
+    // ==========================================
+
+    return reply;
+
+}
+
+let conversationQuery = "";
+
+
 function botReply(question) {
 
+    const q = question.toLowerCase().trim();
 
-    const productResults = searchProducts(question);
+
+    // ==========================================
+    // CONVERSATIONAL FOLLOW-UP DETECTION
+    // ==========================================
+
+    const isAngleFollowUp =
+        /\b(?:make|change|set|switch|want|need)\b.*\b(?:straight|45|60|90|120|135|150|180)\b/i.test(q) ||
+        /\b(?:straight|45|60|90|120|135|150|180)\s*(?:degree|degrees|deg|°)?\b/i.test(q);
 
 
-    if(productResults){
+    const isSizeFollowUp =
+        /\b(?:make|change|switch|use|want|need)\b.*-\s*\d+\s*(?:an|male|female)?\b/i.test(q);
+
+
+    const isNPTFollowUp =
+        /\b(?:make|change|switch|use|want|need)\b.*\b\d+(?:\/\d+|\.\d+)?\s*(?:npt)\b/i.test(q);
+
+
+    const isConversationalFollowUp =
+        (
+            isAngleFollowUp ||
+            isSizeFollowUp ||
+            isNPTFollowUp
+        ) &&
+        conversationQuery;
+
+
+    // ==========================================
+    // BUILD SEARCH QUERY
+    // ==========================================
+
+    let searchQuery = question;
+
+
+    if (isConversationalFollowUp) {
+
+        searchQuery =
+            conversationQuery +
+            " " +
+            question;
+
+
+        // --------------------------------------
+        // REPLACE PREVIOUS ANGLE
+        // --------------------------------------
+
+        const angleMatch =
+            q.match(
+                /\b(0|45|60|90|120|135|150|180)\s*(?:degree|degrees|deg|°)?\b/i
+            );
+
+
+        if (angleMatch) {
+
+            const newAngle =
+                angleMatch[1];
+
+
+            searchQuery =
+                searchQuery.replace(
+                    /\b(0|45|60|90|120|135|150|180)\s*(?:degree|degrees|deg|°)?\b/gi,
+                    ""
+                );
+
+
+            searchQuery +=
+                " " +
+                newAngle +
+                " degree";
+
+        }
+
+
+        // --------------------------------------
+        // STRAIGHT = 0 DEGREE
+        // --------------------------------------
+
+        if (
+            /\bstraight\b/i.test(q)
+        ) {
+
+            searchQuery =
+                searchQuery.replace(
+                    /\b(?:0|45|60|90|120|135|150|180)\s*(?:degree|degrees|deg|°)?\b/gi,
+                    ""
+                );
+
+
+            searchQuery +=
+                " 0 degree";
+
+        }
+
+
+        // --------------------------------------
+        // REPLACE PREVIOUS AN SIZE
+        // --------------------------------------
+
+        const sizeMatch =
+            q.match(
+                /-\s*(\d+)\s*(?:an|male|female)?\b/i
+            );
+
+
+        if (sizeMatch) {
+
+            const newSize =
+                "-" +
+                sizeMatch[1];
+
+
+            searchQuery =
+                searchQuery.replace(
+                    /-\s*\d+\s*an\b/gi,
+                    ""
+                );
+
+
+            searchQuery =
+                searchQuery.replace(
+                    /-\s*\d+\s*(?:male|female)\b/gi,
+                    ""
+                );
+
+
+            searchQuery +=
+                " " +
+                newSize +
+                " AN";
+
+        }
+
+
+        // --------------------------------------
+        // REPLACE PREVIOUS NPT SIZE
+        // --------------------------------------
+
+        const nptMatch =
+            q.match(
+                /\b(\d+(?:\/\d+|\.\d+)?)\s*npt\b/i
+            );
+
+
+        if (nptMatch) {
+
+            const newNPT =
+                nptMatch[1];
+
+
+            searchQuery =
+                searchQuery.replace(
+                    /\b\d+(?:\/\d+|\.\d+)?\s*["']?\s*npt\b/gi,
+                    ""
+                );
+
+
+            searchQuery +=
+                " " +
+                newNPT +
+                " NPT";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // SAVE CONVERSATION QUERY
+    // ==========================================
+
+    conversationQuery =
+        searchQuery.trim();
+
+
+    console.log(
+        "AI CONVERSATION QUERY:",
+        conversationQuery
+    );
+
+
+    // ==========================================
+    // SEARCH V6
+    // ==========================================
+
+    const v6Results =
+        typeof ssrSearchV6 === "function"
+            ? ssrSearchV6(conversationQuery)
+            : null;
+
+
+    // ==========================================
+    // V6 RESULTS
+    // ==========================================
+
+    if (
+        v6Results &&
+        v6Results.length
+    ) {
+
+        return buildV6Reply(
+            conversationQuery,
+            v6Results
+        );
+
+    }
+
+
+    // ==========================================
+    // LEGACY SEARCH
+    // ==========================================
+
+    const productResults =
+        searchProducts(
+            conversationQuery
+        );
+
+
+    if (productResults) {
 
         return productResults;
 
     }
 
 
-    const q = question.toLowerCase();
-
-
+    // ==========================================
+    // FALLBACK RESPONSES
+    // ==========================================
 
     if (q.includes("-6")) {
 
@@ -2075,13 +2490,11 @@ function botReply(question) {
     }
 
 
-
     if (q.includes("ls1")) {
 
-        return "🏁 I can help find LS1 parts. Try a specific search like <strong>LS1 starter motor</strong>, <strong>LS intake</strong>, or a part number.";
+        return "🔧 I can help find LS1 parts. Try a specific search like <strong>LS1 starter motor</strong>, <strong>LS intake</strong>, or a part number.";
 
     }
-
 
 
     if (q.includes("transmission")) {
@@ -2091,7 +2504,6 @@ function botReply(question) {
     }
 
 
-
     if (q.includes("speedflow")) {
 
         return "💥 I can search Speedflow fittings. Try the AN size or angle you need.";
@@ -2099,16 +2511,9 @@ function botReply(question) {
     }
 
 
-
     return "🤖 Try searching by product name, part number, AN size, LS model, Speedflow, or Proflow.";
 
 }
-
-
-
-
-
-
 
 
 function sendMessage() {
@@ -2117,45 +2522,35 @@ function sendMessage() {
 
     const text = input.value.trim();
 
-
     if (text === "") return;
-
 
     addMessage(text, "user");
 
-
     input.value = "";
-
 
     setTimeout(() => {
 
         addMessage(botReply(text), "bot");
 
-    },400);
+    }, 400);
 
 }
-
-
-
-
 
 
 sendBtn.addEventListener("click", sendMessage);
 
 
+input.addEventListener("keypress", function(e) {
 
-
-
-input.addEventListener("keypress", function(e){
-
-
-    if(e.key === "Enter"){
-
+    if (e.key === "Enter") {
 
         sendMessage();
 
-
     }
 
-
 });
+
+
+
+
+
