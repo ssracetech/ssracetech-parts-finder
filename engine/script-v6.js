@@ -1,4 +1,4 @@
-﻿// ======================================
+// ======================================
 // SSRACETECH V6 MASTER ENGINE
 // CLEAN FOUNDATION
 // ======================================
@@ -7128,7 +7128,7 @@ if (
     !title.includes("silicone")
 ) {
 
-    score -= 300000;
+    return false;
 
 }
 
@@ -7153,13 +7153,15 @@ if (
 // ==================================
 
 if (
-    intent.siliconeSize
+    intent.siliconeSize ||
+    intent.diameter
 ) {
 
     const requestedSiliconeSize =
-        parseFloat(
-            intent.siliconeSize
-        );
+    parseFloat(
+        intent.siliconeSize ??
+        intent.diameter
+    );
 
 
     const productSizeMatches =
