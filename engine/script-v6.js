@@ -166,6 +166,16 @@ else if (
 // ==================================
 
 else if (
+    search.includes("oval tube") ||
+    search.includes("oval tubing") ||
+    search.includes("oval exhaust tube") ||
+    search.includes("oval exhaust tubing")
+) {
+
+    intent.category = "oval_tube";
+
+}
+else if (
     search.includes("silicone")
 ) {
 
@@ -2652,6 +2662,16 @@ Object.keys(intent).forEach(key => {
     }
 
 });
+
+// SILICONE SIZE FOLLOW-UP
+// A bare number after a silicone bend request is the requested inch size.
+if (
+    mergedIntent.productFamily === "silicone_bend" &&
+    /^\d+(?:\.\d+)?$/.test(String(message).trim())
+) {
+    mergedIntent.siliconeSize = parseFloat(String(message).trim());
+    mergedIntent.diameter = mergedIntent.siliconeSize;
+}
 
 ssrConversation.known.intent =
     mergedIntent;
@@ -12505,6 +12525,7 @@ console.table(
 return finalResults
     .filter(
         result =>
+            result.score !== false &&
             result.score > -999999
     )
     .slice(
