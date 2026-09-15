@@ -1,4 +1,4 @@
-// ======================================
+﻿// ======================================
 // SSRACETECH V6 MASTER ENGINE
 // CLEAN FOUNDATION
 // ======================================
@@ -769,7 +769,8 @@ else if (
     search.includes("silicone") &&
     (
         search.includes("bend") ||
-        search.includes("elbow")
+        search.includes("elbow") ||
+        /\b(?:30|45|60|90|120|135|150|180)\s*(?:degree|degrees|deg)\b/i.test(search)
     )
 ) {
 
@@ -2028,6 +2029,56 @@ else if (
             intent.connectionDirection;
 
     }
+    // ==================================
+// ADDITIONAL INTENT INTELLIGENCE
+// ==================================
+
+if (intent.productFamily) {
+
+    ssrConversation.known.productFamily =
+        intent.productFamily;
+
+}
+
+
+if (intent.siliconeSize) {
+
+    ssrConversation.known.siliconeSize =
+        intent.siliconeSize;
+
+}
+
+
+if (intent.siliconeType) {
+
+    ssrConversation.known.siliconeType =
+        intent.siliconeType;
+
+}
+
+
+if (intent.material) {
+
+    ssrConversation.known.material =
+        intent.material;
+
+}
+
+
+if (intent.angleDegrees) {
+
+    ssrConversation.known.angleDegrees =
+        intent.angleDegrees;
+
+}
+
+
+if (intent.diameter) {
+
+    ssrConversation.known.diameter =
+        intent.diameter;
+
+}
     // ==================================
     // BUILD REQUIREMENTS
     // ==================================
@@ -7098,57 +7149,82 @@ if (
 
 
     // ==================================
-    // SILICONE SIZE INTELLIGENCE
-    // ==================================
+// SILICONE SIZE INTELLIGENCE
+// ==================================
 
-    if (
-        intent.siliconeSize
+if (
+    intent.siliconeSize
+) {
+
+    const requestedSiliconeSize =
+        parseFloat(
+            intent.siliconeSize
+        );
+
+
+    const productSizeMatches =
+        [
+            ...title.matchAll(
+                /\b(\d+(?:\.\d+)?)\s*(?:inch|in|")\b/gi
+            )
+        ];
+
+
+    let exactSizeMatch =
+        false;
+
+
+    for (
+        const match of productSizeMatches
     ) {
 
-        const requestedSiliconeSize =
+        const productSiliconeSize =
             parseFloat(
-                intent.siliconeSize
-            );
-
-
-        const productSizeMatch =
-            title.match(
-                /\b(\d+(?:\.\d+)?)\s*(?:inch|in|")\b/i
+                match[1]
             );
 
 
         if (
-            productSizeMatch
+            productSiliconeSize ===
+            requestedSiliconeSize
         ) {
 
-            const productSiliconeSize =
-                parseFloat(
-                    productSizeMatch[1]
-                );
+            exactSizeMatch = true;
 
-
-            if (
-                productSiliconeSize ===
-                requestedSiliconeSize
-            ) {
-
-                score += 100000;
-
-            }
-            else {
-
-                score -= 75000;
-
-            }
-
-        }
-        else {
-
-            score -= 50000;
+            break;
 
         }
 
     }
+
+
+    // ==================================
+    // EXACT SILICONE SIZE REQUIRED
+    // ==================================
+
+    if (
+        intent.productFamily ===
+            "silicone_bend" &&
+        !exactSizeMatch
+    ) {
+
+        score -= 2000000;
+
+    }
+    else if (
+        exactSizeMatch
+    ) {
+
+        score += 100000;
+
+    }
+    else {
+
+        score -= 50000;
+
+    }
+
+}
     
 
         // ==================================
@@ -10069,6 +10145,12 @@ function v6ConnectionMatches(
 
 function ssrSearchV6(query) {
 
+    // Keep conversation state synchronized
+    // with the current customer query.
+    if (typeof ssrUpdateConversation === "function") {
+        ssrUpdateConversation(query);
+    }
+
 
     // ======================================
     // CONVERSATION-AWARE INTENT
@@ -10118,6 +10200,32 @@ function ssrSearchV6(query) {
 
 
     // ======================================
+    // ======================================
+    // CLARIFICATION GATE
+    // ======================================
+    //
+    // Ask for required information before
+    // searching the product catalogue.
+    //
+    // ======================================
+
+    if (
+        ssrConversation &&
+        Array.isArray(ssrConversation.missing) &&
+        ssrConversation.missing.length > 0 &&
+        typeof ssrGetNextQuestion === "function"
+    ) {
+
+        const nextQuestion =
+            ssrGetNextQuestion();
+
+        if (nextQuestion) {
+            return [];
+        }
+
+    }
+
+
     // CONVERSATION -> V6 BRIDGE
     // ======================================
     //
@@ -12828,6 +12936,35 @@ const results =
         !results ||
         !results.length
     ) {
+
+        const clarificationQuestion =
+            typeof ssrGetNextQuestion === "function"
+                ? ssrGetNextQuestion()
+                : null;
+
+        if (clarificationQuestion) {
+
+            resultsBox.innerHTML =
+                "<div class=\"ai-summary\">" +
+
+                "<strong>SS RACETECH AI</strong>" +
+
+                "<p>" +
+                clarificationQuestion +
+                "</p>" +
+
+                "</div>";
+
+            messages.appendChild(
+                resultsBox
+            );
+
+            messages.scrollTop =
+                messages.scrollHeight;
+
+            return;
+
+        }
 
         resultsBox.innerHTML =
             "<div class=\"ai-summary\">" +
