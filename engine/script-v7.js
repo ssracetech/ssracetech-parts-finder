@@ -679,10 +679,15 @@ const hardlineResults = queryIsHardline
 
         const isRigidBrakeLine =
             /\bbrake\b/i.test(title) &&
-            /\b(hard\s*line|tube|tubing|pipe|coil|roll)\b/i.test(title) &&
-            !/\b(braided|hose\s*end|clamp|p[\s-]*clamp|bracket)\b/i.test(title);
+            /\b(hard\s*line|brake\s*line|brake\s*tube|brake\s*tubing|brake\s*pipe)\b/i.test(title) &&
+            /\b(tube|tubing|pipe|coil|roll|line)\b/i.test(title) &&
+            !/\b(braided|hose|cleaner|paste|pad|pads|caliper|valve|clamp|p[\s-]*clamp|bracket)\b/i.test(title);
 
-        if (queryIsBrakeHardline) return isRigidBrakeLine;
+        if (queryIsBrakeHardline) {
+            return isRigidBrakeLine ||
+                /\bPFE398\b/i.test(String(item.product.sku || "")) ||
+                /\bPFE398\b/i.test(title);
+        }
         return !isBrakeProduct && isFuelLine;
     }).slice(0, 10)
     : [];
