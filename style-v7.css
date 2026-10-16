@@ -1,0 +1,1594 @@
+/* =========================================================
+   SS RACETECH AI PARTS FINDER
+   DARK MOTORSPORT UI
+========================================================= */
+
+
+* {
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+:root {
+
+    --bg: #080808;
+    --panel: #111111;
+    --panel-light: #171717;
+    --panel-hover: #1c1c1c;
+
+    --red: #e00000;
+    --red-bright: #ff2020;
+    --red-dark: #9e0000;
+
+    --white: #ffffff;
+    --text: #eeeeee;
+    --muted: #8b8b8b;
+    --muted-light: #b5b5b5;
+
+    --border: #292929;
+    --border-light: #363636;
+
+}
+
+
+html {
+
+    background: var(--bg);
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(220, 0, 0, 0.14),
+            transparent 42%
+        ),
+        linear-gradient(
+            180deg,
+            #0b0b0b 0%,
+            #060606 100%
+        );
+
+    color: var(--text);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+
+.app-shell {
+
+    width: min(
+        1100px,
+        calc(100% - 32px)
+    );
+
+    margin: 0 auto;
+
+    padding:
+        32px
+        0
+        24px;
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+
+.app-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 22px;
+
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+}
+
+
+.brand-mark {
+
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1d1d1d,
+            #0e0e0e
+        );
+
+    border:
+        1px solid
+        var(--border-light);
+
+    border-radius: 14px;
+
+    font-size: 25px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.35);
+
+}
+
+
+.brand-name {
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    color: var(--white);
+
+}
+
+
+.brand-subtitle {
+
+    margin-top: 3px;
+
+    color: var(--red-bright);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 3px;
+
+}
+
+
+.ai-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        9px
+        13px;
+
+    border:
+        1px solid
+        rgba(255, 30, 30, 0.28);
+
+    border-radius: 999px;
+
+    background:
+        rgba(130, 0, 0, 0.10);
+
+    color: #d6d6d6;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.status-dot {
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #ff2424;
+
+    box-shadow:
+        0 0 10px
+        rgba(255, 30, 30, 0.8);
+
+}
+
+
+/* =========================================================
+   CHAT PANEL
+========================================================= */
+
+
+.chat-panel {
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #151515,
+            #0e0e0e
+        );
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 22px;
+
+    box-shadow:
+
+        0 25px 70px
+        rgba(0, 0, 0, 0.55),
+
+        0 0 50px
+        rgba(210, 0, 0, 0.07);
+
+}
+
+
+/* =========================================================
+   CHAT HEADER
+========================================================= */
+
+
+.chat-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding:
+        17px
+        21px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    background:
+        rgba(255, 255, 255, 0.015);
+
+}
+
+
+.assistant-avatar {
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--red),
+            var(--red-dark)
+        );
+
+    box-shadow:
+        0 5px 18px
+        rgba(220, 0, 0, 0.25);
+
+    font-size: 18px;
+
+}
+
+
+.assistant-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+
+.assistant-info strong {
+
+    color: var(--white);
+
+    font-size: 14px;
+
+}
+
+
+.assistant-info span {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================================
+   MESSAGE AREA
+========================================================= */
+
+
+.messages {
+
+    height: 430px;
+
+    overflow-y: auto;
+
+    padding:
+        25px;
+
+    scroll-behavior: smooth;
+
+}
+
+
+.messages::-webkit-scrollbar {
+
+    width: 7px;
+
+}
+
+
+.messages::-webkit-scrollbar-track {
+
+    background: transparent;
+
+}
+
+
+.messages::-webkit-scrollbar-thumb {
+
+    background: #303030;
+
+    border-radius: 20px;
+
+}
+
+
+.messages::-webkit-scrollbar-thumb:hover {
+
+    background: #444;
+
+}
+
+
+/* =========================================================
+   MESSAGE ROWS
+========================================================= */
+
+
+.message-row {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.bot-row {
+
+    justify-content: flex-start;
+
+}
+
+
+.bot-avatar {
+
+    flex:
+        0 0 32px;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 3px;
+
+    border-radius: 9px;
+
+    background: #202020;
+
+    border:
+        1px solid
+        #333;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   BOT MESSAGE
+========================================================= */
+
+
+.bot {
+
+    max-width: 760px;
+
+}
+
+
+.message-bubble {
+
+    background:
+        linear-gradient(
+            145deg,
+            #1b1b1b,
+            #141414
+        );
+
+    border:
+        1px solid
+        #303030;
+
+    border-left:
+        3px solid
+        var(--red);
+
+    border-radius:
+        4px
+        15px
+        15px
+        15px;
+
+    padding:
+        17px
+        19px;
+
+    line-height: 1.6;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.20);
+
+}
+
+
+.message-label {
+
+    margin-bottom: 8px;
+
+    color: var(--red-bright);
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+}
+
+
+.welcome-title {
+
+    margin-bottom: 5px;
+
+    color: var(--white);
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+}
+
+
+.message-bubble p {
+
+    margin: 0;
+
+    color: #bcbcbc;
+
+    text-align: left;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   QUICK PROMPTS
+========================================================= */
+
+
+.quick-prompts {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 16px;
+
+}
+
+
+.quick-prompts button {
+
+    padding:
+        8px
+        11px;
+
+    background: #101010;
+
+    color: #d2d2d2;
+
+    border:
+        1px solid
+        #353535;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+
+}
+
+
+.quick-prompts button:hover {
+
+    background: #1c1c1c;
+
+    border-color:
+        var(--red);
+
+    color: white;
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* =========================================================
+   USER MESSAGE
+========================================================= */
+
+
+.user {
+
+    width: fit-content;
+
+    max-width: 75%;
+
+    margin-left: auto;
+    margin-bottom: 18px;
+
+    padding:
+        12px
+        16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #d90000,
+            #a50000
+        );
+
+    color: white;
+
+    border-radius:
+        15px
+        4px
+        15px
+        15px;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    box-shadow:
+        0 7px 20px
+        rgba(190, 0, 0, 0.16);
+
+}
+
+
+/* =========================================================
+   AI SUMMARY
+========================================================= */
+
+
+.ai-summary {
+
+    background:
+        linear-gradient(
+            145deg,
+            #191919,
+            #111111
+        );
+
+    border:
+        1px solid
+        #333;
+
+    border-left:
+        3px solid
+        var(--red);
+
+    border-radius:
+        4px
+        15px
+        15px
+        15px;
+
+    padding:
+        18px
+        20px;
+
+    margin-bottom: 16px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.20);
+
+    line-height: 1.65;
+
+}
+
+
+.ai-summary strong {
+
+    color: white;
+
+    font-size: 16px;
+
+}
+
+
+.ai-summary p {
+
+    margin:
+        9px 0;
+
+    color: #bdbdbd;
+
+    text-align: left;
+
+    font-size: 13px;
+
+}
+
+
+.ai-summary .highlight {
+
+    color:
+        var(--red-bright);
+
+    font-weight: 800;
+
+}
+
+
+/* =========================================================
+   PRODUCT CARDS
+========================================================= */
+
+
+.product-card {
+
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #171717,
+            #0d0d0d
+        );
+
+    border:
+        1px solid
+        #2c2c2c;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin:
+        13px 0;
+
+    text-align: center;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.25);
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.product-card:hover {
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(255, 25, 25, 0.65);
+
+    box-shadow:
+        0 15px 35px
+        rgba(0, 0, 0, 0.35),
+
+        0 0 25px
+        rgba(220, 0, 0, 0.08);
+
+}
+
+
+.product-card img {
+
+    display: block;
+
+    width: 100%;
+
+    max-width: 260px;
+
+    height: 210px;
+
+    object-fit: contain;
+
+    margin:
+        0 auto 16px;
+
+    border-radius: 10px;
+
+}
+
+
+.product-card strong {
+
+    display: inline-block;
+
+    color: white;
+
+    font-size: 16px;
+
+    line-height: 1.45;
+
+}
+
+
+.product-card small {
+
+    display: inline-block;
+
+    margin-top: 7px;
+
+    color: #777;
+
+    font-size: 10px;
+
+    letter-spacing: .4px;
+
+}
+
+
+/* =========================================================
+   BEST MATCH
+========================================================= */
+
+
+.best-match {
+
+    display: inline-block;
+
+    margin-bottom: 14px;
+
+    padding:
+        6px
+        10px;
+
+    background:
+        rgba(220, 0, 0, 0.10);
+
+    border:
+        1px solid
+        rgba(255, 30, 30, 0.35);
+
+    border-radius: 999px;
+
+    color:
+        var(--red-bright);
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+/* =========================================================
+   PRODUCT BUTTON
+========================================================= */
+
+
+.product-button {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 17px;
+
+    padding:
+        11px
+        20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #df0000,
+            #aa0000
+        );
+
+    color: white;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: .8px;
+
+    box-shadow:
+        0 6px 18px
+        rgba(200, 0, 0, 0.18);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+
+}
+
+
+.product-button:hover {
+
+    transform:
+        translateY(-1px);
+
+    background:
+        linear-gradient(
+            145deg,
+            #ff2020,
+            #c00000
+        );
+
+    box-shadow:
+        0 8px 22px
+        rgba(220, 0, 0, 0.28);
+
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+
+.input-section {
+
+    padding:
+        17px
+        21px
+        20px;
+
+    border-top:
+        1px solid
+        var(--border);
+
+    background:
+        rgba(255, 255, 255, 0.012);
+
+}
+
+
+.input-wrapper {
+
+    display: flex;
+
+    gap: 10px;
+
+}
+
+
+input {
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding:
+        14px
+        16px;
+
+    background: #0b0b0b;
+
+    color: white;
+
+    border:
+        1px solid
+        #343434;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+input::placeholder {
+
+    color: #666;
+
+}
+
+
+input:focus {
+
+    border-color:
+        rgba(255, 25, 25, 0.65);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(220, 0, 0, 0.07);
+
+}
+
+
+#sendBtn {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    min-width: 125px;
+
+    padding:
+        0
+        19px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e00000,
+            #a90000
+        );
+
+    color: white;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(200, 0, 0, 0.18);
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+#sendBtn:hover {
+
+    transform:
+        translateY(-1px);
+
+    background:
+        linear-gradient(
+            145deg,
+            #ff2020,
+            #c00000
+        );
+
+    box-shadow:
+        0 9px 25px
+        rgba(220, 0, 0, 0.27);
+
+}
+
+
+.send-arrow {
+
+    font-size: 16px;
+
+}
+
+
+.input-hint {
+
+    margin-top: 8px;
+
+    color: #555;
+
+    font-size: 10px;
+
+    text-align: center;
+
+}
+
+
+.ai-disclaimer {
+
+    margin-top: 10px;
+
+    color: #666;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+
+    text-align: center;
+
+}
+
+.ai-disclaimer strong {
+
+    color: #888;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+
+.app-footer {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 17px;
+
+    color: #4f4f4f;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.footer-divider {
+
+    color:
+        var(--red-dark);
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+
+@media (
+    max-width: 700px
+) {
+
+    .app-shell {
+
+        width:
+            calc(100% - 18px);
+
+        padding-top: 15px;
+
+    }
+
+
+    .app-header {
+
+        margin-bottom: 14px;
+
+    }
+
+
+    .brand-mark {
+
+        width: 44px;
+        height: 44px;
+
+        font-size: 21px;
+
+    }
+
+
+    .brand-name {
+
+        font-size: 20px;
+
+        letter-spacing: 1.5px;
+
+    }
+
+
+    .brand-subtitle {
+
+        font-size: 9px;
+
+        letter-spacing: 2px;
+
+    }
+
+
+    .ai-status {
+
+        padding:
+            7px
+            9px;
+
+        font-size: 8px;
+
+    }
+
+
+    .chat-panel {
+
+        border-radius: 17px;
+
+    }
+
+
+    .messages {
+
+        height: 58vh;
+
+        min-height: 420px;
+
+        padding:
+            16px;
+
+    }
+
+
+    .input-section {
+
+        padding:
+            13px;
+
+    }
+
+
+    .input-wrapper {
+
+        gap: 7px;
+
+    }
+
+
+    #sendBtn {
+
+        min-width: 92px;
+
+        padding:
+            0
+            13px;
+
+    }
+
+
+    .user {
+
+        max-width: 88%;
+
+    }
+
+
+    .product-card {
+
+        padding: 15px;
+
+    }
+
+
+    .product-card img {
+
+        height: 175px;
+
+    }
+
+
+    .quick-prompts {
+
+        gap: 6px;
+
+    }
+
+}
+
+
+@media (
+    max-width: 430px
+) {
+
+    .ai-status span:last-child {
+
+        display: none;
+
+    }
+
+
+    .ai-status {
+
+        border: none;
+
+        background: transparent;
+
+        padding: 4px;
+
+    }
+
+
+    .input-hint {
+
+        display: none;
+
+    }
+
+
+    #sendBtn span:first-child {
+
+        display: none;
+
+    }
+
+
+    #sendBtn {
+
+        min-width: 54px;
+
+    }
+
+}
+/* SS Racetech V7 product results */
+.v7-results {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.v7-product {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #dedede;
+    border-radius: 10px;
+    background: #fff;
+    color: #222;
+}
+
+.v7-product-image {
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    flex: 0 0 88px;
+    border-radius: 6px;
+    background: #f7f7f7;
+}
+
+.v7-product-info {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.v7-product-info a {
+    display: inline-block;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   SS RACETECH V7 - CLEAN SEARCH LAYOUT
+   ========================================= */
+
+/* Remove the empty welcome-message space */
+.chat-panel .messages {
+    height: auto;
+    min-height: 0;
+    max-height: 65vh;
+    padding: 0 22px;
+}
+
+/* Give the search area a little breathing room */
+.chat-panel .input-section {
+    padding: 24px;
+    border-top: 0;
+}
+
+/* Make the search field feel more premium */
+.chat-panel #userInput {
+    min-height: 50px;
+    padding: 14px 16px;
+    border: 1px solid #414448;
+    border-radius: 9px;
+    background: #191b1e;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.chat-panel #userInput:focus {
+    border-color: #d99b36;
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(217 155 54 / 16%);
+}
+
+/* Warm motorsport accent on the search button */
+.chat-panel #sendBtn {
+    min-height: 50px;
+    border-radius: 9px;
+}
+
+/* Keep the search guidance tidy */
+.chat-panel .input-hint {
+    margin-top: 12px;
+    color: #a8adb2;
+    text-align: center;
+}
+
+/* Subtle, readable disclaimer */
+.chat-panel .ai-disclaimer {
+    margin-top: 16px;
+    color: #92979c;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+    .chat-panel .messages {
+        padding: 0 14px;
+    }
+
+    .chat-panel .input-section {
+        padding: 18px 14px;
+    }
+}
+
+/* =========================================
+   SS RACETECH V7 - MOTORSPORT HERO
+   ========================================= */
+
+.v7-hero {
+    padding: 38px 28px 24px;
+    border-bottom: 1px solid #303337;
+    background:
+        radial-gradient(
+            ellipse at 90% 0%,
+            rgba(217, 155, 54, 0.10),
+            transparent 55%
+        ),
+        linear-gradient(135deg, #17191b, #101112);
+}
+
+.v7-hero-eyebrow {
+    margin-bottom: 16px;
+    color: #d99b36;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.v7-hero h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 900;
+    line-height: 1.12;
+    letter-spacing: -1px;
+}
+
+.v7-hero h1 span {
+    display: block;
+    margin-top: 5px;
+    color: #d99b36;
+}
+
+.v7-hero p {
+    margin: 16px 0 20px;
+    color: #c1c5c9;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.v7-category-line {
+    color: #a5aaaf;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.9;
+    letter-spacing: 1px;
+}
+
+.v7-category-line span {
+    padding: 0 5px;
+    color: #d99b36;
+}
+
+.chat-panel .messages {
+    height: auto;
+    min-height: 0;
+    max-height: 65vh;
+    padding: 0 22px;
+}
+
+.chat-panel .input-section {
+    padding: 22px 24px;
+    border-top: 0;
+}
+
+.chat-panel #userInput {
+    min-height: 50px;
+    border-color: #45484b;
+    border-radius: 8px;
+    background: #191b1e;
+    color: #ffffff;
+}
+
+.chat-panel #userInput:focus {
+    border-color: #d99b36;
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(217 155 54 / 16%);
+}
+
+.chat-panel #sendBtn {
+    min-height: 50px;
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    .v7-hero {
+        padding: 28px 17px 20px;
+    }
+
+    .v7-hero p {
+        font-size: 13px;
+    }
+
+    .chat-panel .messages {
+        padding: 0 14px;
+    }
+
+    .chat-panel .input-section {
+        padding: 18px 14px;
+    }
+
+    .v7-category-line {
+        letter-spacing: 0.5px;
+    }
+}
+/* V7 headline finishing touches */
+
+.v7-hero h1 {
+    max-width: 650px;
+    line-height: 1.16;
+}
+
+.v7-hero h1 span {
+    display: block;
+    margin-top: 8px;
+}
+
+.v7-hero-eyebrow {
+    text-transform: uppercase;
+}
+
+.chat-panel #sendBtn {
+    background: #d99b36;
+    border-color: #d99b36;
+    color: #111315;
+    font-weight: 800;
+}
+
+.chat-panel #sendBtn:hover {
+    background: #edb653;
+    border-color: #edb653;
+}

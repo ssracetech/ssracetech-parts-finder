@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SS Racetech AI Parts Finder V7</title>
+
+    <link rel="stylesheet" href="style-v7.css">
+
+</head>
+
+
+<body>
+
+    <main class="app-shell">
+
+
+        <!-- ================================= -->
+        <!-- HEADER -->
+        <!-- ================================= -->
+
+        <header class="app-header">
+
+            <div class="brand">
+
+                <div class="brand-mark">
+                    &#127937;
+                </div>
+
+                <div>
+
+                    <div class="brand-name">
+                        SS RACETECH
+                    </div>
+
+                    <div class="brand-subtitle">
+                        AI PARTS FINDER
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="ai-status">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    AI ONLINE
+                </span>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================================= -->
+        <!-- CHAT PANEL -->
+        <!-- ================================= -->
+
+        <section class="chat-panel">
+
+            <!-- V7 MOTORSPORT HERO -->
+
+            <div class="v7-hero">
+
+                <div class="v7-hero-eyebrow">
+    YOUR BUILD. YOUR PARTS. YOUR WAY.
+</div>
+
+                <h1>
+                    FIND THE RIGHT PART.
+                    <span>GET BACK TO BUILDING.</span>
+                </h1>
+
+                <p>
+                    From AN fittings to engine parts,
+                    find what your build needs.
+                </p>
+
+                <div class="v7-category-line">
+                    FITTINGS <span>•</span>
+                    HOSES <span>•</span>
+                    ENGINE PARTS <span>•</span>
+                    MOTORSPORT PLUMBING
+                </div>
+
+            </div>
+
+
+
+            
+            <!-- ================================= -->
+            <!-- MESSAGES -->
+            <!-- ================================= -->
+
+            <div id="messages" class="messages">
+
+
+         
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- INPUT -->
+            <!-- ================================= -->
+
+            <div class="input-section">
+
+                <div class="input-wrapper">
+
+                    <input
+                        type="text"
+                        id="userInput"
+                        autocomplete="off"
+                        placeholder="Ask me what you need..."
+                    >
+
+                    <button
+                        id="sendBtn"
+                        type="button"
+                        onclick="sendMessage()"
+                    >
+                        <span>SEARCH</span>
+                        <span class="send-arrow">&#8594;</span>
+                    </button>
+
+                </div>
+
+                <div class="input-hint">
+                    Try a size, fitting, engine, vehicle or part.
+                </div>
+
+                <div class="ai-disclaimer">
+                    <strong>Please note:</strong>
+                    AI can make mistakes. Always check important fitment,
+                    specifications and safety information before use.
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ================================= -->
+        <!-- FOOTER -->
+        <!-- ================================= -->
+
+        <footer class="app-footer">
+
+            <span>
+                SS RACETECH
+            </span>
+
+            <span class="footer-divider">
+                •
+            </span>
+
+            <span>
+                PARTS INTELLIGENCE
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+    <!-- ====================================== -->
+    <!-- PRODUCT DATABASE -->
+    <!-- ====================================== -->
+
+    <script src="engine/loader-v7.js"></script>
+
+
+    <!-- ====================================== -->
+    <!-- V6 SEARCH ENGINE -->
+    <!-- ====================================== -->
+
+    <script src="engine/script-v7.js"></script>
+
+
+    <!-- ====================================== -->
+    <!-- QUICK PROMPTS -->
+    <!-- ====================================== -->
+
+    <script>
+
+        function quickAsk(query) {
+
+            const input =
+                document.getElementById(
+                    "userInput"
+                );
+
+            if (!input) {
+                return;
+            }
+
+            input.value = query;
+
+            sendMessage();
+
+        }
+
+
+        // ENTER KEY
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const input =
+                    document.getElementById(
+                        "userInput"
+                    );
+
+                if (!input) {
+                    return;
+                }
+
+                input.addEventListener(
+                    "keydown",
+                    function (event) {
+
+                        if (
+                            event.key === "Enter"
+                        ) {
+
+                            event.preventDefault();
+
+                            sendMessage();
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>
