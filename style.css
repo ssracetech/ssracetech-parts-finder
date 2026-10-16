@@ -1347,3 +1347,248 @@ input:focus {
     }
 
 }
+/* SS Racetech V7 product results */
+.v7-results {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.v7-product {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #dedede;
+    border-radius: 10px;
+    background: #fff;
+    color: #222;
+}
+
+.v7-product-image {
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    flex: 0 0 88px;
+    border-radius: 6px;
+    background: #f7f7f7;
+}
+
+.v7-product-info {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.v7-product-info a {
+    display: inline-block;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   SS RACETECH V7 - CLEAN SEARCH LAYOUT
+   ========================================= */
+
+/* Remove the empty welcome-message space */
+.chat-panel .messages {
+    height: auto;
+    min-height: 0;
+    max-height: 65vh;
+    padding: 0 22px;
+}
+
+/* Give the search area a little breathing room */
+.chat-panel .input-section {
+    padding: 24px;
+    border-top: 0;
+}
+
+/* Make the search field feel more premium */
+.chat-panel #userInput {
+    min-height: 50px;
+    padding: 14px 16px;
+    border: 1px solid #414448;
+    border-radius: 9px;
+    background: #191b1e;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.chat-panel #userInput:focus {
+    border-color: #d99b36;
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(217 155 54 / 16%);
+}
+
+/* Warm motorsport accent on the search button */
+.chat-panel #sendBtn {
+    min-height: 50px;
+    border-radius: 9px;
+}
+
+/* Keep the search guidance tidy */
+.chat-panel .input-hint {
+    margin-top: 12px;
+    color: #a8adb2;
+    text-align: center;
+}
+
+/* Subtle, readable disclaimer */
+.chat-panel .ai-disclaimer {
+    margin-top: 16px;
+    color: #92979c;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+    .chat-panel .messages {
+        padding: 0 14px;
+    }
+
+    .chat-panel .input-section {
+        padding: 18px 14px;
+    }
+}
+
+/* =========================================
+   SS RACETECH V7 - MOTORSPORT HERO
+   ========================================= */
+
+.v7-hero {
+    padding: 38px 28px 24px;
+    border-bottom: 1px solid #303337;
+    background:
+        radial-gradient(
+            ellipse at 90% 0%,
+            rgba(217, 155, 54, 0.10),
+            transparent 55%
+        ),
+        linear-gradient(135deg, #17191b, #101112);
+}
+
+.v7-hero-eyebrow {
+    margin-bottom: 16px;
+    color: #d99b36;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.v7-hero h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 900;
+    line-height: 1.12;
+    letter-spacing: -1px;
+}
+
+.v7-hero h1 span {
+    display: block;
+    margin-top: 5px;
+    color: #d99b36;
+}
+
+.v7-hero p {
+    margin: 16px 0 20px;
+    color: #c1c5c9;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.v7-category-line {
+    color: #a5aaaf;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.9;
+    letter-spacing: 1px;
+}
+
+.v7-category-line span {
+    padding: 0 5px;
+    color: #d99b36;
+}
+
+.chat-panel .messages {
+    height: auto;
+    min-height: 0;
+    max-height: 65vh;
+    padding: 0 22px;
+}
+
+.chat-panel .input-section {
+    padding: 22px 24px;
+    border-top: 0;
+}
+
+.chat-panel #userInput {
+    min-height: 50px;
+    border-color: #45484b;
+    border-radius: 8px;
+    background: #191b1e;
+    color: #ffffff;
+}
+
+.chat-panel #userInput:focus {
+    border-color: #d99b36;
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(217 155 54 / 16%);
+}
+
+.chat-panel #sendBtn {
+    min-height: 50px;
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    .v7-hero {
+        padding: 28px 17px 20px;
+    }
+
+    .v7-hero p {
+        font-size: 13px;
+    }
+
+    .chat-panel .messages {
+        padding: 0 14px;
+    }
+
+    .chat-panel .input-section {
+        padding: 18px 14px;
+    }
+
+    .v7-category-line {
+        letter-spacing: 0.5px;
+    }
+}
+/* V7 headline finishing touches */
+
+.v7-hero h1 {
+    max-width: 650px;
+    line-height: 1.16;
+}
+
+.v7-hero h1 span {
+    display: block;
+    margin-top: 8px;
+}
+
+.v7-hero-eyebrow {
+    text-transform: uppercase;
+}
+
+.chat-panel #sendBtn {
+    background: #d99b36;
+    border-color: #d99b36;
+    color: #111315;
+    font-weight: 800;
+}
+
+.chat-panel #sendBtn:hover {
+    background: #edb653;
+    border-color: #edb653;
+}

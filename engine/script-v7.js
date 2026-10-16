@@ -26,13 +26,17 @@
             .trim();
     }
 
-    function normalise(text) {
-        return String(text || "")
-            .toLowerCase()
-            .replace(/<[^>]*>/g, " ")
-            .replace(/[^a-z0-9.+-]+/g, " ")
-            .trim();
-    }
+
+function normalise(text) {
+    return String(text || "")
+        .toLowerCase()
+        .replace(/\bhardline\b/g, "hard line")
+        .replace(/\bbrakeline\b/g, "brake line")
+        .replace(/<[^>]*>/g, " ")
+        .replace(/[^a-z0-9.+-]+/g, " ")
+        .trim();
+}
+
 function scoreSpecifications(product, query) {
     const rawQuery = String(query || "");
     const q = normalise(rawQuery);
@@ -442,12 +446,23 @@ const queryIsSiliconeBend =
     /\bsilicone\b/i.test(query) &&
     /\b(bend|elbow)\b/i.test(query);
 
+
             const queryIsHoseEnd =
                 /\bhose[\s-]*ends?\b/i.test(query) ||
                 /\bhoseend\b/i.test(query) ||
                 /\bhose[\s-]*tails?\b/i.test(query);
 
-            
+            const queryIsHardline =
+                /\bhard\s*line\b|\bhardline\b/i.test(normalise(query));
+
+            const queryIsBrakeLine =
+                /\bbrake\s*hard\s*line\b|\bbrake\s*line\b|\bbrakeline\b|\bbrake\s*(pipe|tubing)\b/i.test(normalise(query));
+
+            const queryIsBrakeHardline =
+                queryIsBrakeLine && queryIsHardline;
+
+
+
 const getProductIdentity = product =>
     normalise(
         product.title + " " + product.tags + " " +
@@ -612,7 +627,7 @@ const ranked = products
             a.product.title.localeCompare(b.product.title);
     });
 
-            
+
 // Keep aluminium donut searches strictly within the requested product type.
 if (/\b(?:aluminium|aluminum)\b/i.test(query) && /\bdonuts?\b/i.test(query)) {
     const requestedSizeMatch = query.match(
@@ -649,8 +664,45 @@ const exactMetricResults = requestedMetric
     : [];
 
 
+
+const hardlineResults = queryIsHardline
+    ? ranked.filter(item => {
+        const title = normalise(item.product.title);
+        const identity = getProductIdentity(item.product);
+
+        const isBrakeProduct =
+            /\bbrake\b|\bbrakes\b/i.test(identity);
+
+        const isFuelLine =
+            /\b(fuel\s*line|fuel\s*tube|hard\s*line)\b/i.test(title) &&
+            /\b(tube|tubing|pipe|line|coil|roll)\b/i.test(title);
+
+        const isRigidBrakeLine =
+            /\bbrake\b/i.test(title) &&
+            /\b(hard\s*line|tube|tubing|pipe|coil|roll)\b/i.test(title) &&
+            !/\b(braided|hose\s*end|clamp|p[\s-]*clamp|bracket)\b/i.test(title);
+
+        if (queryIsBrakeHardline) return isRigidBrakeLine;
+        return !isBrakeProduct && isFuelLine;
+    }).slice(0, 10)
+    : [];
+
+const brakeLineResults = queryIsBrakeLine
+    ? ranked.filter(item => {
+        const title = normalise(item.product.title);
+        if (!/\bbrake\b/i.test(title)) return false;
+
+        return /\b(line|tube|tubing|pipe|braided|hose\s*end|hose)\b/i.test(title) &&
+            !/\b(clamp|p[\s-]*clamp|bracket)\b/i.test(title);
+    }).slice(0, 10)
+    : [];
+
 const exactResults =
-    requestedMetric && exactMetricResults.length
+    queryIsHardline
+        ? hardlineResults
+        : queryIsBrakeLine
+            ? brakeLineResults
+            : requestedMetric && exactMetricResults.length
         ? exactMetricResults.slice(0, 10)
         : queryIsSiliconeBend
             ? ranked.filter(item => {
