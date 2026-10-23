@@ -1592,3 +1592,89 @@ input:focus {
     background: #edb653;
     border-color: #edb653;
 }
+
+/* =========================================
+   FRIENDLY ROBOT WELCOME - V7
+   ========================================= */
+
+.robot-welcome {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 22px 24px 8px;
+    padding: 18px;
+    border: 1px solid #363a3e;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #202326, #17191b);
+}
+
+.robot-avatar {
+    display: flex;
+    flex: 0 0 66px;
+    width: 66px;
+    height: 66px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #4a4e52;
+    border-radius: 16px;
+    background: #292d31;
+    font-size: 42px;
+}
+
+.robot-welcome-copy {
+    min-width: 0;
+}
+
+.robot-welcome-title {
+    margin-bottom: 7px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.robot-welcome-copy p {
+    margin: 0;
+    color: #c1c5c9;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.robot-welcome-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.robot-welcome-examples span {
+    color: #e2b15c;
+    font-size: 11px;
+}
+
+.robot-welcome-examples span:first-child {
+    color: #92979c;
+}
+
+@media (max-width: 600px) {
+    .robot-welcome {
+        gap: 12px;
+        margin: 16px 14px 8px;
+        padding: 14px;
+    }
+
+    .robot-avatar {
+        flex-basis: 52px;
+        width: 52px;
+        height: 52px;
+        font-size: 33px;
+    }
+
+    .robot-welcome-title {
+        font-size: 14px;
+    }
+
+    .robot-welcome-examples {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
