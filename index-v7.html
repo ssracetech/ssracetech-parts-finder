@@ -101,6 +101,34 @@
             <!-- MESSAGES -->
             <!-- ================================= -->
 
+<!-- FRIENDLY V7 PARTS ASSISTANT WELCOME -->
+<div class="robot-welcome">
+
+    <div class="robot-avatar" aria-hidden="true">
+        🤖
+    </div>
+
+    <div class="robot-welcome-copy">
+        <div class="robot-welcome-title">
+            G'day! I'm your SS Racetech parts helper.
+        </div>
+
+        <p>
+            Tell me what you're building or what part you're chasing,
+            and let's find the right gear.
+        </p>
+
+        <div class="robot-welcome-examples">
+            <span>Try asking:</span>
+            <span>“I need a -6AN hose end”</span>
+            <span>“I'm chasing a 3-inch silicone reducer”</span>
+        </div>
+    </div>
+
+</div>
+<!-- END FRIENDLY WELCOME -->
+
+
             <div id="messages" class="messages">
 
 
@@ -181,75 +209,13 @@
 
     <script src="engine/loader-v7.js"></script>
 
-
-    <!-- ====================================== -->
+<!-- ====================================== -->
     <!-- V6 SEARCH ENGINE -->
     <!-- ====================================== -->
 
     <script src="engine/script-v7.js"></script>
 
-
-    <!-- ====================================== -->
-    <!-- QUICK PROMPTS -->
-    <!-- ====================================== -->
-
-    <script>
-
-        function quickAsk(query) {
-
-            const input =
-                document.getElementById(
-                    "userInput"
-                );
-
-            if (!input) {
-                return;
-            }
-
-            input.value = query;
-
-            sendMessage();
-
-        }
-
-
-        // ENTER KEY
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-
-                const input =
-                    document.getElementById(
-                        "userInput"
-                    );
-
-                if (!input) {
-                    return;
-                }
-
-                input.addEventListener(
-                    "keydown",
-                    function (event) {
-
-                        if (
-                            event.key === "Enter"
-                        ) {
-
-                            event.preventDefault();
-
-                            sendMessage();
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-    </script>
-
+<!-- ====================================== -->
 
 </body>
 
