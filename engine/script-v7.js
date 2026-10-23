@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     "use strict";
 
     const $ = id => document.getElementById(id);
@@ -113,7 +113,7 @@ function scoreSpecifications(product, query) {
     function extractInchSizes(text) {
         const sizes = [];
         const pattern =
-            /(?:^|[^0-9.])(\d+(?:\.\d+)?)\s*(?:inches|inch|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/gi;
+            /(?:^|[^0-9.])(\d+(?:\.\d+)?)\s*(?:inches|inch|in\.?\b|["]|\u2033)/gi;
 
         let match;
         while ((match = pattern.exec(String(text || ""))) !== null) {
@@ -141,11 +141,11 @@ function scoreSpecifications(product, query) {
 
     // Match the requested bend or elbow angle.
     const requestedAngles = [
-        ...rawQuery.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi)
+        ...rawQuery.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0)/gi)
     ].map(match => Number(match[1]));
 
     const productAngles = [
-        ...productText.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi)
+        ...productText.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0)/gi)
     ].map(match => Number(match[1]));
 
     for (const angle of requestedAngles) {
@@ -559,7 +559,7 @@ function scoreSpecifications(product, query) {
         const displayQuery = query;
 
         const isSizeReply =
-            /^(?:\d+(?:\.\d+)?\s*(?:inch(?:es)?|in\.?|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])?)$/i.test(query);
+            /^(?:\d+(?:\.\d+)?\s*(?:inch(?:es)?|in\.?|["]|\u2033)?)$/i.test(query);
 
         let requestedHoseSeries =
             (query.match(/\b(100|200|400)\s*series\b/i) || [])[1] || "";
@@ -686,20 +686,20 @@ const isExactHoseEnd = product => {
 
     if (requestsStraight) {
         return /\bstraight\b/i.test(title) &&
-            !/\b\d{1,3}\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/i.test(rawTitle);
+            !/\b\d{1,3}\s*(?:degrees?|deg\b|\u00B0)/i.test(rawTitle);
     }
 
     // If a particular angle is requested, require that exact angle
     // to be stated in the product title.
     const requestedAngle = query.match(
-        /\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/i
+        /\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0)/i
     );
 
     if (requestedAngle) {
         const angle = Number(requestedAngle[1]);
         const productAngles = [
             ...rawTitle.matchAll(
-                /\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi
+                /\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0)/gi
             )
         ].map(match => Number(match[1]));
 
@@ -900,7 +900,7 @@ const ranked = products
             : null;
 
         const requestedAngleMatch = String(query || "").match(
-            /\b(\d{1,3})\s*(?:degrees?|deg\b|Â°|(?=\s+(?:bend|bends|elbow|elbows)\b))/i
+            /\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0|(?=\s+(?:bend|bends|elbow|elbows)\b))/i
         );
         const requestedAngle = requestedAngleMatch
             ? Number(requestedAngleMatch[1])
@@ -994,7 +994,7 @@ const ranked = products
 
                 const angles = [
                     ...title.matchAll(
-                        /\b(\d{1,3})\s*(?:degrees?|deg\b|Â°)/gi
+                        /\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0)/gi
                     )
                 ].map(match => Number(match[1]));
 
@@ -1110,7 +1110,7 @@ if (
 // Keep aluminium donut searches strictly within the requested product type.
 if (/\b(?:aluminium|aluminum)\b/i.test(query) && /\bdonuts?\b/i.test(query)) {
     const requestedSizeMatch = query.match(
-        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/i
+        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["]|\u2033)/i
     );
     const requestedSize = requestedSizeMatch
         ? Number(requestedSizeMatch[1])
@@ -1126,7 +1126,7 @@ if (/\b(?:aluminium|aluminum)\b/i.test(query) && /\bdonuts?\b/i.test(query)) {
 
         if (requestedSize !== null) {
             const sizeMatch = title.match(
-                /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/i
+                /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["]|\u2033)/i
             );
             if (!sizeMatch || Math.abs(Number(sizeMatch[1]) - requestedSize) >= 0.01) {
                 return false;
@@ -1251,13 +1251,13 @@ const exactResults =
 
                 const requestedAngles = [
                     ...query.matchAll(
-                        /\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi
+                        /\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0)/gi
                     )
                 ].map(match => Number(match[1]));
 
                 const requestedInches = [
                     ...query.matchAll(
-                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/gi
+                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["]|\u2033)/gi
                     )
                 ].map(match => Number(match[1]));
 
@@ -1270,13 +1270,13 @@ const exactResults =
 
                 const productAngles = [
                     ...productText.matchAll(
-                        /\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi
+                        /\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0)/gi
                     )
                 ].map(match => Number(match[1]));
 
                 const productInches = [
                     ...productText.matchAll(
-                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/gi
+                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["]|\u2033)/gi
                     )
                 ].map(match => Number(match[1]));
 
@@ -1455,7 +1455,7 @@ const results = queryIsHoseEnd
                 results.length > 0 &&
                 /\b(?:aluminium|aluminum)\b/i.test(query) &&
                 /\bdonuts?\b/i.test(query) &&
-                !/(?:\b\d+(?:\.\d+)?\s*(?:inch(?:es)?|in\.?)\b|\b\d+(?:\.\d+)?\s*["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/i.test(query);
+                !/(?:\b\d+(?:\.\d+)?\s*(?:inch(?:es)?|in\.?)\b|\b\d+(?:\.\d+)?\s*["\u2033])/i.test(query);
 
             if (asksForDonutSize) {
                 pendingFollowUpQuery = query;
