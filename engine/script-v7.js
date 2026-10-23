@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
     "use strict";
 
     const $ = id => document.getElementById(id);
@@ -30,6 +30,10 @@
 function normalise(text) {
     return String(text || "")
         .toLowerCase()
+        // Common customer shorthand and catalogue wording variants.
+        .replace(/\bally\b/g, "aluminium")
+        .replace(/\baluminum\b/g, "aluminium")
+        .replace(/\btubing\b/g, "tube")
         .replace(/\bhardline\b/g, "hard line")
         .replace(/\bbrakeline\b/g, "brake line")
         .replace(/<[^>]*>/g, " ")
@@ -53,11 +57,63 @@ function scoreSpecifications(product, query) {
 
     let bonus = 0;
 
+    // Prefer explicitly requested materials across all catalogue categories.
+    const requestedMaterial =
+        /\baluminium\b|\baluminum\b/.test(q) ? "aluminium" :
+        /\bstainless\s+steel\b|\bstainless\b/.test(q) ? "stainless" :
+        /\bsilicone\b/.test(q) ? "silicone" :
+        /\bsteel\b/.test(q) ? "steel" :
+        /\bplastic\b|\bnylon\b/.test(q) ? "plastic" : "";
+
+    if (requestedMaterial) {
+        const titleAndType = normalise(
+            String(product.title || "") + " " +
+            String(product.type || "") + " " +
+            String(product.category || "") + " " +
+            String(product.tags || "")
+        );
+
+        const isAluminium =
+            /\baluminium\b|\baluminum\b/.test(titleAndType);
+        const isStainless =
+            /\bstainless\b/.test(titleAndType);
+        const isSilicone = /\bsilicone\b/.test(titleAndType);
+        const isSteel =
+            /\bsteel\b/.test(titleAndType) && !isStainless;
+        const isPlastic =
+            /\bplastic\b|\bnylon\b/.test(titleAndType);
+
+        const matchesMaterial =
+            requestedMaterial === "aluminium" ? isAluminium :
+            requestedMaterial === "stainless" ? isStainless :
+            requestedMaterial === "silicone" ? isSilicone :
+            requestedMaterial === "steel" ? isSteel :
+            requestedMaterial === "plastic" ? isPlastic : false;
+
+        const hasConflictingMaterial =
+            requestedMaterial === "aluminium" &&
+                (isStainless || isSilicone || isSteel) ||
+            requestedMaterial === "stainless" &&
+                (isAluminium || isSilicone) ||
+            requestedMaterial === "silicone" &&
+                (isAluminium || isStainless || isSteel) ||
+            requestedMaterial === "steel" &&
+                (isAluminium || isStainless || isSilicone) ||
+            requestedMaterial === "plastic" &&
+                (isAluminium || isStainless || isSilicone || isSteel);
+
+        if (matchesMaterial) {
+            bonus += 100;
+        } else if (hasConflictingMaterial) {
+            bonus -= 100;
+        }
+    }
+
     // Match requested inch sizes precisely: 3 inches is not 3.5 inches.
     function extractInchSizes(text) {
         const sizes = [];
         const pattern =
-            /(?:^|[^0-9.])(\d+(?:\.\d+)?)\s*(?:inches|inch|in\.?\b|["″])/gi;
+            /(?:^|[^0-9.])(\d+(?:\.\d+)?)\s*(?:inches|inch|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/gi;
 
         let match;
         while ((match = pattern.exec(String(text || ""))) !== null) {
@@ -85,11 +141,11 @@ function scoreSpecifications(product, query) {
 
     // Match the requested bend or elbow angle.
     const requestedAngles = [
-        ...rawQuery.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|°)/gi)
+        ...rawQuery.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi)
     ].map(match => Number(match[1]));
 
     const productAngles = [
-        ...productText.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|°)/gi)
+        ...productText.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi)
     ].map(match => Number(match[1]));
 
     for (const angle of requestedAngles) {
@@ -237,6 +293,52 @@ function scoreSpecifications(product, query) {
 
         let score = 0;
 
+        // Air-filter intent: match the requested intake neck size.
+        const wantsAirFilter =
+            /\bair\s*filters?\b|\bpod\s*filters?\b/i.test(q);
+        const filterSizeMatch =
+            q.match(/\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\b|")/i);
+        const explicitlyRequestsElement =
+            /\b(element|cleaner|replacement|height|high)\b/i.test(q);
+
+        if (
+            wantsAirFilter &&
+            filterSizeMatch &&
+            !explicitlyRequestsElement
+        ) {
+            const requestedInches = Number(filterSizeMatch[1]);
+            const productHasNeck = /\bneck\b/i.test(title);
+            const productIsElement =
+                /\b(element|cleaner|round\s*insert)\b/i.test(title);
+
+            const neckMatch = title.match(
+                /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\b|")\s*neck\b|\bneck\b[^,;)]{0,20}?\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\b|")/i
+            );
+            const neckMMMatch = title.match(
+                /\b(\d+(?:\.\d+)?)\s*mm\s*(?:\([^)]*\)\s*)?(?:neck)\b/i
+            );
+
+            let actualNeckInches = null;
+
+            if (neckMatch) {
+                actualNeckInches = Number(neckMatch[1] || neckMatch[2]);
+            } else if (neckMMMatch) {
+                actualNeckInches = Number(neckMMMatch[1]) / 25.4;
+            }
+
+            if (actualNeckInches !== null) {
+                if (Math.abs(actualNeckInches - requestedInches) < 0.06) {
+                    score += 100;
+                } else {
+                    score -= 100;
+                }
+            } else if (productHasNeck) {
+                score += 10;
+            }
+
+            if (productIsElement && !productHasNeck) score -= 35;
+        }
+
         // Exact title and SKU matches are strong evidence.
         if (title === q) score += 200;
         else if (title.includes(q)) score += 100;
@@ -245,6 +347,7 @@ function scoreSpecifications(product, query) {
         else if (skus.includes(q)) score += 80;
 
         // Product identity fields carry more weight than descriptions.
+        let titleMatches = 0;
         let identityMatches = 0;
         let meaningfulTerms = 0;
 
@@ -253,6 +356,33 @@ function scoreSpecifications(product, query) {
             "with", "need", "want", "find", "me", "please"
         ]);
 
+        const titleWords = title.split(/\s+/).filter(Boolean);
+
+        function editDistance(a, b) {
+            let previous = Array.from(
+                { length: b.length + 1 },
+                (_, i) => i
+            );
+
+            for (let i = 1; i <= a.length; i++) {
+                let diagonal = previous[0];
+                previous[0] = i;
+
+                for (let j = 1; j <= b.length; j++) {
+                    const above = previous[j];
+
+                    previous[j] = Math.min(
+                        previous[j] + 1,
+                        previous[j - 1] + 1,
+                        diagonal + (a[i - 1] === b[j - 1] ? 0 : 1)
+                    );
+
+                    diagonal = above;
+                }
+            }
+
+            return previous[b.length];
+        }
         for (const term of terms) {
             if (stopWords.has(term)) continue;
             meaningfulTerms++;
@@ -274,10 +404,34 @@ function scoreSpecifications(product, query) {
                 best = Math.max(best, 1);
             }
 
+            // Fuzzy-match ordinary words against product titles only.
+            // Never fuzzy-match numbers, sizes, or part numbers.
+            let fuzzyTitleMatch = false;
+
+            if (best <= 1 && /^[a-z]{4,}$/.test(term)) {
+                const maxDistance = term.length >= 8 ? 2 : 1;
+
+                fuzzyTitleMatch = titleWords.some(word =>
+                    /^[a-z]+$/.test(word) &&
+                    Math.abs(word.length - term.length) <= maxDistance &&
+                    editDistance(term, word) <= maxDistance
+                );
+
+                if (fuzzyTitleMatch) best = 12;
+            }
+
+            if (
+                title.split(/\s+/).includes(term) ||
+                fuzzyTitleMatch
+            ) {
+                titleMatches++;
+            }
+
             score += best;
 
             if (
                 title.split(/\s+/).includes(term) ||
+                fuzzyTitleMatch ||
                 type.split(/\s+/).includes(term) ||
                 tags.split(/\s+/).includes(term)
             ) {
@@ -285,8 +439,14 @@ function scoreSpecifications(product, query) {
             }
         }
 
-        if (meaningfulTerms && identityMatches === meaningfulTerms) {
+        if (meaningfulTerms && titleMatches === meaningfulTerms) {
             score += 35;
+        }
+
+        if (meaningfulTerms > 1) {
+            score += Math.round(
+                (titleMatches / meaningfulTerms) * 45
+            );
         }
 
         // Use catalogue descriptions to distinguish vehicle makes
@@ -399,7 +559,7 @@ function scoreSpecifications(product, query) {
         const displayQuery = query;
 
         const isSizeReply =
-            /^(?:\d+(?:\.\d+)?\s*(?:inch(?:es)?|in\.?|["″])?)$/i.test(query);
+            /^(?:\d+(?:\.\d+)?\s*(?:inch(?:es)?|in\.?|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])?)$/i.test(query);
 
         let requestedHoseSeries =
             (query.match(/\b(100|200|400)\s*series\b/i) || [])[1] || "";
@@ -407,9 +567,17 @@ function scoreSpecifications(product, query) {
 
         if (pendingFollowUpQuery && pendingFollowUpType === "hose_series") {
             answeringHoseSeries = true;
+
+            const isNotSureReply = /\bnot\s+sure\b/i.test(query);
             const seriesReply = query.match(/\b(100|200|400)\s*series\b/i);
-            requestedHoseSeries = seriesReply ? seriesReply[1] : "";
+
+            requestedHoseSeries = isNotSureReply
+                ? ""
+                : (seriesReply ? seriesReply[1] : "");
+
+            // Restore the original request so the original size and intent remain.
             query = pendingFollowUpQuery;
+
             pendingFollowUpQuery = "";
             pendingFollowUpType = "";
         } else if (
@@ -444,7 +612,8 @@ function scoreSpecifications(product, query) {
 
 const queryIsSiliconeBend =
     /\bsilicone\b/i.test(query) &&
-    /\b(bend|elbow)\b/i.test(query);
+    /\b(bend|elbow)\b/i.test(query) &&
+    !/\b(reducer|reducing)\b/i.test(query);
 
 
             const queryIsHoseEnd =
@@ -476,9 +645,12 @@ const isExactHoseEnd = product => {
 
     // The product title must identify a genuine hose end.
     const isHoseEnd =
-        /\bhose[\s-]*ends?\b|\bhoseend\b|\bhose[\s-]*tails?\b/i.test(title);
+        /\bhose[\s-]*ends?\b|\bhoseend\b/i.test(title);
 
-    if (!isHoseEnd) return false;
+    // Hose tails are not interchangeable with AN hose ends.
+    if (!isHoseEnd || /\bhose[\s-]*tails?\b/i.test(title)) {
+        return false;
+    }
 
     // Match the requested AN size when one is supplied.
     const requestedAN = query.match(/(?:^|\s)-\s*0?(\d{1,2})\s*AN\b/i);
@@ -514,20 +686,20 @@ const isExactHoseEnd = product => {
 
     if (requestsStraight) {
         return /\bstraight\b/i.test(title) &&
-            !/\b\d{1,3}\s*(?:degrees?|deg\b|°)/i.test(rawTitle);
+            !/\b\d{1,3}\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/i.test(rawTitle);
     }
 
     // If a particular angle is requested, require that exact angle
     // to be stated in the product title.
     const requestedAngle = query.match(
-        /\b(\d{1,3})\s*(?:degrees?|deg\b|°)/i
+        /\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/i
     );
 
     if (requestedAngle) {
         const angle = Number(requestedAngle[1]);
         const productAngles = [
             ...rawTitle.matchAll(
-                /\b(\d{1,3})\s*(?:degrees?|deg\b|°)/gi
+                /\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi
             )
         ].map(match => Number(match[1]));
 
@@ -619,6 +791,264 @@ const ranked = products
     })
     .filter(item => item.score > 0)
     .sort((a, b) => {
+        const wantsAirFilter =
+            /\b(?:air|pod)\s*filters?\b/i.test(query);
+
+        const requestedFilterSizeMatch = query.match(
+            /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\b|")/i
+        );
+
+        if (wantsAirFilter && requestedFilterSizeMatch) {
+            const requestedNeckInches =
+                Number(requestedFilterSizeMatch[1]);
+
+            const getFilterDetails = item => {
+                const title = String(item.product.title || "");
+
+                const isPod =
+                    /\bpod\s*(?:air\s*)?filter\b/i.test(title);
+
+                const isElement =
+                    /\b(element|cleaner|round\s*insert)\b/i.test(title);
+
+                let neckInches = null;
+
+                const mixedNeck = title.match(
+                    /\b(\d+)\s*-\s*(\d+)\s*\/\s*(\d+)\s*(?:inch(?:es)?|in\b|")\s*neck\b/i
+                );
+
+                const mmNeck = title.match(
+                    /\b(\d+(?:\.\d+)?)\s*mm\s*(?:\([^)]*\)\s*)?neck\b/i
+                );
+
+                const inchNeck = title.match(
+                    /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\b|")\s*neck\b/i
+                );
+
+                const parentheticalInchNeck = title.match(
+                    /\b(\d+(?:\.\d+)?)\s*mm\s*\(\s*(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\b|")\s*\)\s*neck\b/i
+                );
+
+                if (mixedNeck && Number(mixedNeck[3]) !== 0) {
+                    neckInches =
+                        Number(mixedNeck[1]) +
+                        Number(mixedNeck[2]) / Number(mixedNeck[3]);
+                } else if (parentheticalInchNeck) {
+                    neckInches = Number(parentheticalInchNeck[2]);
+                } else if (mmNeck) {
+                    neckInches = Number(mmNeck[1]) / 25.4;
+                } else if (inchNeck) {
+                    neckInches = Number(inchNeck[1]);
+                }
+
+                const heightMatch = title.match(
+                    /\b(\d+(?:\.\d+)?)\s*mm\s*high\b/i
+                );
+
+                const height = heightMatch
+                    ? Number(heightMatch[1])
+                    : null;
+
+                if (neckInches !== null) {
+                    if (
+                        Math.abs(neckInches - requestedNeckInches) < 0.06
+                    ) {
+                        return {
+                            rank: isPod ? 0 : 1,
+                            height
+                        };
+                    }
+
+                    return { rank: 4, height };
+                }
+
+                if (isElement) return { rank: 5, height };
+
+                return {
+                    rank: isPod ? 2 : 3,
+                    height
+                };
+            };
+
+            const filterA = getFilterDetails(a);
+            const filterB = getFilterDetails(b);
+
+            if (filterA.rank !== filterB.rank) {
+                return filterA.rank - filterB.rank;
+            }
+
+            if (
+                filterA.rank === 0 &&
+                filterA.height !== null &&
+                filterB.height !== null &&
+                filterA.height !== filterB.height
+            ) {
+                return filterB.height - filterA.height;
+            }
+        }
+
+        // Query-specific ranking: activate only for tube or bend searches.
+        const queryText = normalise(String(query || ""));
+        const wantsTube = /\b(tube|tubing|pipe|piping)\b/i.test(queryText);
+        const wantsBend = /\b(bend|bends|elbow|elbows)\b/i.test(queryText);
+
+        const requestedSizeMatch = String(query || "").match(
+            /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\b|")/i
+        );
+        const requestedSize = requestedSizeMatch
+            ? Number(requestedSizeMatch[1])
+            : null;
+
+        const requestedAngleMatch = String(query || "").match(
+            /\b(\d{1,3})\s*(?:degrees?|deg\b|Â°|(?=\s+(?:bend|bends|elbow|elbows)\b))/i
+        );
+        const requestedAngle = requestedAngleMatch
+            ? Number(requestedAngleMatch[1])
+            : null;
+
+        const requestedMaterial =
+            /\baluminium\b|\baluminum\b/.test(queryText) ? "aluminium" :
+            /\bstainless(?:\s+steel)?\b/.test(queryText) ? "stainless" :
+            /\bsilicone\b/.test(queryText) ? "silicone" :
+            /\bsteel\b/.test(queryText) ? "steel" :
+            /\bplastic\b|\bnylon\b/.test(queryText) ? "plastic" : "";
+
+        const useTubePriority = wantsTube && !wantsBend;
+        const useBendPriority = wantsBend;
+
+        if (useTubePriority || useBendPriority) {
+            const getPriorityDetails = item => {
+                const title = normalise([
+                    item.product.title,
+                    item.product.type,
+                    item.product.category
+                ].join(" "));
+
+                const sizes = [
+                    ...title.matchAll(
+                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\b|")/gi
+                    )
+                ].map(match => Number(match[1]));
+
+                const exactSize = requestedSize !== null &&
+                    sizes.some(size => Math.abs(size - requestedSize) < 0.01);
+
+                const hasAluminium =
+                    /\baluminium\b|\baluminum\b/.test(title);
+                const hasStainless = /\bstainless\b/.test(title);
+                const hasSilicone = /\bsilicone\b/.test(title);
+                const hasSteel =
+                    /\bsteel\b/.test(title) && !hasStainless;
+                const hasPlastic = /\bplastic\b|\bnylon\b/.test(title);
+
+                const materialMatches =
+                    requestedMaterial === "aluminium" ? hasAluminium :
+                    requestedMaterial === "stainless" ? hasStainless :
+                    requestedMaterial === "silicone" ? hasSilicone :
+                    requestedMaterial === "steel" ? hasSteel :
+                    requestedMaterial === "plastic" ? hasPlastic : false;
+
+                const materialConflicts =
+                    requestedMaterial === "aluminium"
+                        ? hasStainless || hasSilicone || hasSteel :
+                    requestedMaterial === "stainless"
+                        ? hasAluminium || hasSilicone :
+                    requestedMaterial === "silicone"
+                        ? hasAluminium || hasStainless || hasSteel :
+                    requestedMaterial === "steel"
+                        ? hasAluminium || hasStainless || hasSilicone :
+                    requestedMaterial === "plastic"
+                        ? hasAluminium || hasStainless || hasSilicone || hasSteel :
+                    false;
+
+                const materialRank = !requestedMaterial ? 0 :
+                    materialMatches ? 0 :
+                    materialConflicts ? 2 : 1;
+
+                // Exclude hardware and fittings that mention tube or pipe
+                // but are not themselves tube/pipe products.
+                const isAccessory =
+                    /\b(clamps?|separators?|valves?|fittings?|adapters?|adaptors?|brackets?|holders?|clips?|retainers?|mounts?|connectors?|couplers?|reducers?)\b/i
+                        .test(title);
+
+                const isTubeProduct =
+                    /\b(tube|tubing|pipe|piping)\b/i.test(title) &&
+                    !isAccessory;
+
+                const isStraight = isTubeProduct &&
+                    /\bstraight\b/i.test(title) &&
+                    !/\b(elbow|bend|bends|coupler)\b/i.test(title);
+
+                const isBend = isTubeProduct &&
+                    /\b(elbow|bend|bends)\b/i.test(title);
+
+                // Lower rank is better:
+                // exact-size straight, exact-size bend, other exact-size
+                // tube, then less-certain tube matches, then unrelated items.
+                const tubeRank = !isTubeProduct ? 6 :
+                    exactSize && isStraight ? 0 :
+                    exactSize && isBend ? 1 :
+                    exactSize ? 2 :
+                    isStraight ? 3 :
+                    isBend ? 4 : 5;
+
+                const angles = [
+                    ...title.matchAll(
+                        /\b(\d{1,3})\s*(?:degrees?|deg\b|Â°)/gi
+                    )
+                ].map(match => Number(match[1]));
+
+                const angleRank = requestedAngle === null ? 0 :
+                    angles.includes(requestedAngle) ? 0 :
+                    angles.length ? 2 : 1;
+
+                return {
+                    exactSize,
+                    materialRank,
+                    angleRank,
+                    tubeRank
+                };
+            };
+
+            const priorityA = getPriorityDetails(a);
+            const priorityB = getPriorityDetails(b);
+
+            // Tube searches: requested material first, then genuine product
+            // type and exact size. This works across catalogue brands.
+            if (useTubePriority) {
+                if (
+                    requestedMaterial &&
+                    priorityA.materialRank !== priorityB.materialRank
+                ) {
+                    return priorityA.materialRank - priorityB.materialRank;
+                }
+
+                if (priorityA.tubeRank !== priorityB.tubeRank) {
+                    return priorityA.tubeRank - priorityB.tubeRank;
+                }
+            }
+
+            // Preserve size and angle priorities for bend/elbow searches.
+            if (useBendPriority) {
+                if (
+                    requestedSize !== null &&
+                    priorityA.exactSize !== priorityB.exactSize
+                ) {
+                    return priorityA.exactSize ? -1 : 1;
+                }
+
+                if (
+                    requestedMaterial &&
+                    priorityA.materialRank !== priorityB.materialRank
+                ) {
+                    return priorityA.materialRank - priorityB.materialRank;
+                }
+
+                if (priorityA.angleRank !== priorityB.angleRank) {
+                    return priorityA.angleRank - priorityB.angleRank;
+                }
+            }
+        }
         if (requestedMetric && a.exactMetric !== b.exactMetric) {
             return a.exactMetric ? -1 : 1;
         }
@@ -628,10 +1058,59 @@ const ranked = products
     });
 
 
+// V7 EXPLICIT AN CONNECTION GUARD
+// For general AN-size searches, verify the connection from the product
+// title or description rather than relying on catalogue tags alone.
+const requestedANConnection = query.match(
+    /(?:^|\s)-\s*0?(\d{1,2})\s*AN\b/i
+);
+
+if (
+    requestedANConnection &&
+    !queryIsHoseEnd &&
+    !queryIsHardline &&
+    !queryIsBrakeLine
+) {
+    const requestedANSize = Number(requestedANConnection[1]);
+
+    const verifiedANResults = ranked.filter(item => {
+        const title = normalise(item.product.title || "");
+        const description = normalise(
+            plainText(item.product.description || "")
+        );
+        const evidence = title + " " + description;
+
+        const explicitANConnection = new RegExp(
+            "(?:-\\s*0?" + requestedANSize +
+            "\\s*AN\\b|\\bAN\\s*-\\s*0?" +
+            requestedANSize + "\\b)",
+            "i"
+        ).test(evidence);
+
+        const genuineHoseEnd =
+            /\bhose[\s-]*ends?\b|\bhoseend\b/i.test(title) &&
+            !/\bhose[\s-]*tails?\b/i.test(title);
+
+        const titleSizeTokens = [
+            ...String(item.product.title || "").matchAll(
+                /-(\d{1,2})(?=$|[\s-])/g
+            )
+        ].map(match => Number(match[1]));
+
+        const correctlySizedHoseEnd =
+            genuineHoseEnd &&
+            titleSizeTokens.includes(requestedANSize);
+
+        return explicitANConnection || correctlySizedHoseEnd;
+    });
+
+    ranked.splice(0, ranked.length, ...verifiedANResults);
+}
+
 // Keep aluminium donut searches strictly within the requested product type.
 if (/\b(?:aluminium|aluminum)\b/i.test(query) && /\bdonuts?\b/i.test(query)) {
     const requestedSizeMatch = query.match(
-        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["″])/i
+        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/i
     );
     const requestedSize = requestedSizeMatch
         ? Number(requestedSizeMatch[1])
@@ -647,7 +1126,7 @@ if (/\b(?:aluminium|aluminum)\b/i.test(query) && /\bdonuts?\b/i.test(query)) {
 
         if (requestedSize !== null) {
             const sizeMatch = title.match(
-                /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["″])/i
+                /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/i
             );
             if (!sizeMatch || Math.abs(Number(sizeMatch[1]) - requestedSize) >= 0.01) {
                 return false;
@@ -702,6 +1181,53 @@ const brakeLineResults = queryIsBrakeLine
     }).slice(0, 10)
     : [];
 
+// V7 SILICONE REDUCER FILTER
+const queryIsSiliconeReducer =
+    /\b(reducer|reducing)\b/i.test(query) &&
+    (
+        /\bsilicone\b/i.test(query) ||
+        /\b\d+(?:\.\d+)?\s*(?:inches?\b|in\.?\b|["\u2033])\s*(?:to|-)\s*\d+(?:\.\d+)?\s*(?:inches?\b|in\.?\b|["\u2033])/i.test(query)
+    );
+
+const siliconeReducerResults = queryIsSiliconeReducer
+    ? ranked.filter(item => {
+        const title = normalise(item.product.title || "");
+        const identity = getProductIdentity(item.product);
+
+        // Require a silicone reducer, not just any reducer.
+        if (!/\bsilicone\b/i.test(identity)) return false;
+        if (!/\breducer|reducing\b/i.test(identity)) return false;
+
+        // Read common catalogue formats such as 3", 3.00in and 3 inch.
+        const sizeText = [
+            item.product.title,
+            item.product.tags,
+            item.product.type,
+            item.product.category,
+            item.product.description
+        ].map(value => plainText(String(value || ""))).join(" ");
+
+        const inchSizes = [
+            ...sizeText.matchAll(
+                /\b(\d+(?:\.\d+)?)\s*(?:inches?\b|in\.?\b|["\u2033])/gi
+            )
+        ].map(match => Number(match[1]));
+
+        const requestedSizes = [
+            ...query.matchAll(
+                /\b(\d+(?:\.\d+)?)\s*(?:inches?\b|in\.?\b|["\u2033])/gi
+            )
+        ].map(match => Number(match[1]));
+
+        // A requested size must match at least one reducer end.
+        return requestedSizes.length === 0 ||
+            requestedSizes.every(size =>
+                inchSizes.some(productSize =>
+                    Math.abs(productSize - size) < 0.01
+                )
+            );
+    }).slice(0, 10)
+    : [];
 const exactResults =
     queryIsHardline
         ? hardlineResults
@@ -725,13 +1251,13 @@ const exactResults =
 
                 const requestedAngles = [
                     ...query.matchAll(
-                        /\b(\d{1,3})\s*(?:degrees?|deg\b|°)/gi
+                        /\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi
                     )
                 ].map(match => Number(match[1]));
 
                 const requestedInches = [
                     ...query.matchAll(
-                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["″])/gi
+                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/gi
                     )
                 ].map(match => Number(match[1]));
 
@@ -744,13 +1270,13 @@ const exactResults =
 
                 const productAngles = [
                     ...productText.matchAll(
-                        /\b(\d{1,3})\s*(?:degrees?|deg\b|°)/gi
+                        /\b(\d{1,3})\s*(?:degrees?|deg\b|Ãƒâ€šÃ‚Â°)/gi
                     )
                 ].map(match => Number(match[1]));
 
                 const productInches = [
                     ...productText.matchAll(
-                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["″])/gi
+                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/gi
                     )
                 ].map(match => Number(match[1]));
 
@@ -773,12 +1299,88 @@ const exactResults =
                     angleMatches &&
                     sizeMatches;
             }).slice(0, 10)
+            : queryIsSiliconeReducer
+            ? siliconeReducerResults
             : queryIsHoseEnd
                 ? ranked.filter(item =>
                     isExactHoseEnd(item.product)
                 ).slice(0, 10)
-                : ranked.slice(0, 10);
+            : /\b(?:air|pod)\s*filters?\b/i.test(query)
+                ? ranked.filter(item => {
+                    const title = String(item.product.title || "");
+                    return /\b(?:air|pod)\s*filters?\b/i.test(title);
+                }).slice(0, 10)
+                                : (() => {
+                    const queryTerms = normalise(query)
+                        .split(/\s+/)
+                        .filter(term =>
+                            term.length > 2 &&
+                            !["the", "and", "for", "with", "need", "want", "find", "me", "please"].includes(term)
+                        );
 
+                    const generalResults = queryTerms.length >= 3
+                        ? ranked.filter(item => {
+                            const title = normalise(item.product.title || "");
+                            const titleMatches = queryTerms.filter(term =>
+                                title.split(/\s+/).includes(term)
+                            ).length;
+
+                            return titleMatches >= 2 && item.score >= 40;
+                        })
+                        : ranked;
+
+                    const seen = new Set();
+
+                    return generalResults.filter(item => {
+                        const key = String(
+                            item.product.handle ||
+                            item.product.variants?.[0]?.sku ||
+                            item.product.title ||
+                            ""
+                        ).trim().toLowerCase();
+
+                        if (!key || seen.has(key)) return false;
+                        seen.add(key);
+                        return true;
+                    }).slice(0, 10);
+                })();
+
+const reducerAlternativeResults = queryIsSiliconeReducer && siliconeReducerResults.length === 0
+    ? ranked.filter(item => {
+        const product = item.product;
+        const identity = getProductIdentity(product);
+
+        if (!/\bsilicone\b/i.test(identity)) return false;
+        if (!/\breducer|reducing\b/i.test(identity)) return false;
+
+        const productText = [
+            product.title,
+            product.tags,
+            product.type,
+            product.category,
+            product.description
+        ].map(value => plainText(String(value || ""))).join(" ");
+
+        const productSizes = [
+            ...productText.matchAll(
+                /\b(\d+(?:\.\d+)?)\s*(?:inches?\b|in\.?\b|["\u2033])/gi
+            )
+        ].map(match => Number(match[1]));
+
+        const requestedSizes = [
+            ...query.matchAll(
+                /\b(\d+(?:\.\d+)?)\s*(?:inches?\b|in\.?\b|["\u2033])/gi
+            )
+        ].map(match => Number(match[1]));
+
+        return requestedSizes.length > 0 &&
+            requestedSizes.some(size =>
+                productSizes.some(productSize =>
+                    Math.abs(productSize - size) < 0.01
+                )
+            );
+    }).slice(0, 5)
+    : [];
 const alternativeResults = queryIsHoseEnd
     ? ranked.filter(item => {
         const product = item.product;
@@ -793,14 +1395,13 @@ const alternativeResults = queryIsHoseEnd
             return false;
         }
 
-        // When an AN size was requested, require that same size
-        // and an explicit AN reference in the alternative's title.
-        const requestedAN = query.match(/(?:^|\s)-\s*0?(\d{1,2})\s*AN\b/i);
+        // When the query includes an AN size, require that same size
+        // for alternative fittings, even when the customer writes "-6 hose end".
+        const requestedAN = query.match(/(?:^|\s)-\s*0?(\d{1,2})(?:\s*AN\b|\s+(?=hose[\s-]*ends?\b|hoseend\b|hose[\s-]*tails?\b))/i);
 
         if (requestedAN) {
-            if (!/\bAN\b/i.test(title)) return false;
-
             const size = Number(requestedAN[1]);
+
             const sizePattern = new RegExp(
                 "(?:^|[^a-z0-9])-" +
                 "(?:0*" + size + ")" +
@@ -817,7 +1418,11 @@ const alternativeResults = queryIsHoseEnd
 
 const results = queryIsHoseEnd
     ? exactResults.concat(alternativeResults)
-    : exactResults;
+    : queryIsSiliconeReducer
+        ? (siliconeReducerResults.length
+            ? siliconeReducerResults
+            : reducerAlternativeResults)
+        : exactResults;
 
 
             if (!waiting) return;
@@ -842,16 +1447,15 @@ const results = queryIsHoseEnd
                     '<div><button type="button" onclick="quickAsk(\'100 Series\')">100 Series</button><p>For compatible 100/120 Series braided hose.</p></div>' +
                     '<div><button type="button" onclick="quickAsk(\'200 Series\')">200 Series</button><p>For compatible 200 Series Teflon-braided hose.</p></div>' +
                     '<div><button type="button" onclick="quickAsk(\'400 Series\')">400 Series</button><p>For compatible 400, 332 and 598 Series hose.</p></div>' +
-                    '<button type="button" onclick="quickAsk(\'Not sure\')">Not sure — show all matching options</button>' +
+                    '<button type="button" onclick="quickAsk(\'Not sure\')">Not sure - show all matching options</button>' +
                     '</div>';
                 return;
             }
-
             const asksForDonutSize =
                 results.length > 0 &&
                 /\b(?:aluminium|aluminum)\b/i.test(query) &&
                 /\bdonuts?\b/i.test(query) &&
-                !/(?:\b\d+(?:\.\d+)?\s*(?:inch(?:es)?|in\.?)\b|\b\d+(?:\.\d+)?\s*["″])/i.test(query);
+                !/(?:\b\d+(?:\.\d+)?\s*(?:inch(?:es)?|in\.?)\b|\b\d+(?:\.\d+)?\s*["ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â³])/i.test(query);
 
             if (asksForDonutSize) {
                 pendingFollowUpQuery = query;
@@ -865,13 +1469,22 @@ const results = queryIsHoseEnd
             if (!results.length) {
                 bubble.innerHTML =
                     '<div class="message-label">SS RACETECH V7</div>' +
-                    '<p>I couldn’t find a confident match for that search. Try a product name, brand, SKU or size.</p>';
+                    '<p>I couldn\'t find a confident match for that search. Try a product name, brand, SKU or size.</p>';
                 return;
             }
 
             bubble.innerHTML =
                 '<div class="message-label">SS RACETECH V7</div>' +
-                (queryIsHoseEnd
+                (queryIsSiliconeReducer && !siliconeReducerResults.length
+                    ? '<p>I couldn\'t find an exact match for a silicone reducer with all the requested sizes in our current catalogue.</p>' +
+                      '<p>No worries, though! Here are some alternatives we do stock that may help with your setup.</p>' +
+                      '<h3>Closest available options</h3>' +
+                      '<div class="v7-results">' +
+                      reducerAlternativeResults.map(item => productCard(item.product)).join("") +
+                      '</div>' +
+                      '<h3>Can\'t find the exact size?</h3>' +
+                      '<p>Contact SS Racetech and we\'ll help you look at your options.</p>'
+                    : queryIsHoseEnd
                     ? (exactResults.length
                         ? '<h3>Exact Matches</h3><div class="v7-results">' +
                             exactResults.map(item => productCard(item.product)).join("") +
@@ -917,3 +1530,23 @@ const results = queryIsHoseEnd
         }
     });
 })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
