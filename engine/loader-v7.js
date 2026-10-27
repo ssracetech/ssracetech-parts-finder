@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     "use strict";
 
     function parseCSV(text) {
@@ -126,6 +126,61 @@
         }
 
         const products = Array.from(productsByHandle.values());
+
+        // Attach structured intelligence to the existing live catalogue.
+        // The Shopify CSV remains usable if this optional file is unavailable.
+        let intelligenceMatched = 0;
+
+        try {
+            const intelligenceResponse = await fetch("data/product-intelligence.json");
+
+            if (!intelligenceResponse.ok) {
+                throw new Error(
+                    "Could not load product-intelligence.json (" +
+                    intelligenceResponse.status + ")"
+                );
+            }
+
+            const intelligenceRecords = await intelligenceResponse.json();
+
+            if (!Array.isArray(intelligenceRecords)) {
+                throw new Error("Intelligence JSON is not an array.");
+            }
+
+            const intelligenceByHandle = new Map(
+                intelligenceRecords
+                    .filter(record => record && record.handle)
+                    .map(record => [
+                        String(record.handle).trim(),
+                        record
+                    ])
+            );
+
+            for (const product of products) {
+                const record = intelligenceByHandle.get(product.handle);
+
+                if (!record) continue;
+
+                product.attributes = record.attributes || {};
+                product.searchText = record.searchText || "";
+                product.family = record.family || "";
+                product.subtype = record.subtype || "";
+                product.brand = record.brand || "";
+
+                intelligenceMatched++;
+            }
+
+            console.log("V7 PRODUCT INTELLIGENCE LINKED", {
+                intelligenceRecords: intelligenceRecords.length,
+                catalogueProducts: products.length,
+                matchedProducts: intelligenceMatched
+            });
+        } catch (error) {
+            console.warn(
+                "V7 intelligence unavailable; continuing with CSV catalogue:",
+                error.message
+            );
+        }
 
         window.ssrV7Products = products;
 

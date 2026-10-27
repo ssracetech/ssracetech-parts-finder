@@ -297,9 +297,11 @@ function scoreSpecifications(product, query) {
         // Identify the main part type requested by the customer.
         const categoryGroups = [
             { pattern: /\b(starter|starting)\s*motor\b|\bmini\s*starter\b/, words: ["starter", "motor"] },
+            { pattern: /\b(?:cooling|coolant|radiator|heater)\b.*\b(?:hoses?|joiners?|couplers?)\b|\b(?:hoses?|joiners?|couplers?)\b.*\b(?:cooling|coolant|radiator|heater)\b/i, productPattern: /\b(?:cooling|coolant|radiator|heater)\b.*\b(?:hoses?|joiners?|couplers?)\b|\b(?:hoses?|joiners?|couplers?)\b.*\b(?:cooling|coolant|radiator|heater)\b/i, words: ["cooling", "coolant", "radiator", "heater", "hose", "joiner", "coupler"] },
             { pattern: /\bhose[\s-]*ends?\b|\bhoseend\b|\bhose[\s-]*tails?\b/, words: ["hose", "end"] },
             { pattern: /\bsilicone\b.*\b(bend|elbow|coupler)\b|\b(bend|elbow|coupler)\b.*\bsilicone\b/, words: ["silicone", "bend"] },
             { pattern: /\b(screw|bolt|stud|fastener)s?\b/, words: ["screw", "bolt", "stud", "fastener"] },
+            { pattern: /\bwater\s*pumps?\b|\bmechanical\s*pumps?\b|\belectric\s*water\s*pumps?\b/i, productPattern: /\bwater\s*pumps?\b(?!\s*(?:bolt|gasket|seal|repair\s*kit|mounting\s*kit)\b)/i, words: ["water", "pump"] },
             { pattern: /\b(water\s*neck|thermostat\s*housing)\b/, words: ["water", "neck"] },
             { pattern: /\b(fuel\s*rail)s?\b/, words: ["fuel", "rail"] },
             { pattern: /\b(flexplate|flywheel)s?\b/, words: ["flexplate", "flywheel"] },
@@ -317,14 +319,24 @@ function scoreSpecifications(product, query) {
         );
 
         const productMatchesRequestedType = requestedGroups.length === 0 ||
-            requestedGroups.some(group =>
-                group.pattern.test(identity) ||
-                group.pattern.test(title)
-            );
+            requestedGroups.some(group => {
+                const productPattern = group.productPattern || group.pattern;
+                return productPattern.test(identity) ||
+                    productPattern.test(title);
+            });
 
         // A clearly different product type should not qualify on stray
         // words in its description alone.
         if (requestedGroups.length && !productMatchesRequestedType) {
+            return 0;
+        }
+
+        // Exclude accessories when the customer asks for a water pump.
+        const wantsWaterPump = /\bwater\s*pumps?\b/i.test(q);
+        const waterPumpAccessory =
+            /\b(?:bolt|gasket|seal|bracket|pulley)\b|\bbelt\s*drive\b|\b(?:repair|mounting)\s*kit\b|\b(?:gilmer|belt)\b.*\bkit\b|\bkit\b.*\b(?:gilmer|belt)\b/i;
+
+        if (wantsWaterPump && waterPumpAccessory.test(title)) {
             return 0;
         }
 
@@ -495,7 +507,9 @@ function scoreSpecifications(product, query) {
             product.tags,
             product.type,
             product.category,
-            plainText(product.description)
+            plainText(product.description),
+            product.searchText || "",
+            JSON.stringify(product.attributes || {})
         ].join(" ")).replace(/\bchev\b/g, "chevrolet");
 
         const queryVehicle = q.replace(/\bchev\b/g, "chevrolet");
@@ -535,9 +549,8 @@ function scoreSpecifications(product, query) {
 
             if (vehicleEvidence.split(/\s+/).includes(normalisedClue)) {
                 score += 25;
-            } else if (requestedGroups.length) {
-                score -= 12;
             }
+            // Missing vehicle evidence is not proof of incompatibility.
         }
         if (requestedGroups.length) score += 30;
 
@@ -627,6 +640,15 @@ function scoreSpecifications(product, query) {
             query = pendingFollowUpQuery + " " + query;
             pendingFollowUpQuery = "";
             pendingFollowUpType = "";
+        } else if (
+            pendingFollowUpQuery &&
+            pendingFollowUpType === "general"
+        ) {
+            query = window.ssrV7Conversation
+                ? window.ssrV7Conversation.mergeReply(pendingFollowUpQuery, query)
+                : pendingFollowUpQuery + " " + query;
+            pendingFollowUpQuery = "";
+            pendingFollowUpType = "";
         } else if (pendingFollowUpQuery) {
             pendingFollowUpQuery = "";
             pendingFollowUpType = "";
@@ -654,6 +676,10 @@ const queryIsSiliconeBend =
     /\b(bend|elbow)\b/i.test(query) &&
     !/\b(reducer|reducing)\b/i.test(query);
 
+const queryIsCoolingHoseJoiner =
+    /\b(cooling|coolant|radiator|heater)\b/i.test(query) &&
+    /\bhose\b/i.test(query) &&
+    /\b(joiners?|couplers?)\b/i.test(query);
 
             const queryIsHoseEnd =
                 /\bhose[\s-]*ends?\b/i.test(query) ||
@@ -765,12 +791,13 @@ const ranked = products
 
         // Final vehicle-fitment guard. This prevents another scoring
         // rule from reintroducing a clearly conflicting application.
+        // Use catalogue identity, not incidental description mentions,
+        // for make and engine-family fitment checks.
         const fitmentText = normalise([
             product.title,
             product.tags,
             product.type,
-            product.category,
-            plainText(product.description)
+            product.category
         ].join(" ")).replace(/\bchev\b/g, "chevrolet");
 
         const fitmentQuery = normalise(query)
@@ -799,7 +826,49 @@ const ranked = products
             (wantsLS && (productFord || productHolden)) ||
             (wantsLS && productChevrolet && !productIsLS);
 
-        const finalScore = conflictsWithVehicle ? 0 : score;
+        // Engine-family guard: distinguish Ford Windsor, Cleveland
+        // and Modified families using the product's catalogue identity.
+        const familyEvidence = normalise([
+            product.title,
+            product.tags,
+            product.type,
+            product.category
+        ].join(" "));
+
+        const wantsWindsor = /\bwindsor\b/i.test(fitmentQuery);
+        const wantsCleveland =
+            /\bcleveland\b|\b351\s*c\b|\b351c\b/i.test(fitmentQuery);
+        const wantsModified =
+            /\b351\s*m\b|\b351m\b|\b400\s*m\b|\b400m\b|\bmodified\b/i.test(fitmentQuery);
+
+        const productWindsor = /\bwindsor\b/i.test(familyEvidence);
+        const productCleveland =
+            /\bcleveland\b|\b351\s*c\b|\b351c\b/i.test(familyEvidence);
+        const productModified =
+            /\b351\s*m\b|\b351m\b|\b400\s*m\b|\b400m\b/i.test(familyEvidence);
+
+        const productBigBlockFord =
+            /\bford\b/i.test(familyEvidence) &&
+            /\b(?:429|460)\b/i.test(familyEvidence);
+
+        const conflictsWithEngineFamily =
+            (wantsWindsor &&
+                (productCleveland || productModified) &&
+                !productWindsor) ||
+            (wantsCleveland &&
+                (productWindsor || productModified) &&
+                !productCleveland) ||
+            (wantsModified &&
+                (productWindsor || productCleveland) &&
+                !productModified) ||
+            (wantsFord && productIsLS) ||
+            ((wantsWindsor || wantsCleveland) &&
+                productBigBlockFord &&
+                !productWindsor &&
+                !productCleveland);
+
+        const finalScore =
+            conflictsWithVehicle || conflictsWithEngineFamily ? 0 : score;
 
         const productText = [
             product.title,
@@ -1518,14 +1587,58 @@ const title = normalise(rawTitle);
                             const isPipeTubeSearch =
                                 /\b(pipe|piping|tube|tubing)\b/i.test(queryTextForFallback);
 
-                            // Allow broader discovery for general pipe/tube searches.
-                            // The shape, size, angle and material checks below
-                            // still decide which products can pass.
+                            // Category-aware discovery for cooling hoses and joiners.
+                            // Match the product's own catalogue identity, not just its title.
+                            const fallbackProductIdentity = normalise([
+                                product.title,
+                                product.tags,
+                                product.type,
+                                product.category
+                            ].join(" "));
+
+                            const isCoolingHoseQuery =
+                                /\b(?:cooling|coolant|radiator|heater)\b/i.test(queryTextForFallback) &&
+                                /\b(?:hose|joiner|coupler)\b/i.test(queryTextForFallback);
+
+                            const isCoolingHoseProduct =
+                                /\b(?:cooling|coolant|radiator|heater)\b.*\b(?:hoses?|joiners?|couplers?)\b|\b(?:hoses?|joiners?|couplers?)\b.*\b(?:cooling|coolant|radiator|heater)\b/i.test(fallbackProductIdentity);
+
+                            const isCoolingCategoryMatch =
+                                isCoolingHoseQuery &&
+                                isCoolingHoseProduct &&
+                                item.score >= 30;
+
+                            // Explicit cooling hose joiner/coupler intent:
+                            // reject ordinary hose lengths and unrelated couplers.
+                            const requestsJoinerOrCoupler =
+                                /\b(joiners?|couplers?)\b/i.test(queryTextForFallback);
+
+                            const joinerProductTitle = normalise(rawTitle);
+
+                            const isRelevantJoinerProduct =
+                                /\b(joiners?|couplers?)\b/i.test(joinerProductTitle) &&
+                                /\b(silicone|hose|coolant|cooling|radiator|heater)\b/i.test(joinerProductTitle) &&
+                                !/\b(reducers?|elbows?|bends?)\b/i.test(joinerProductTitle);
+
+                            if (
+                                isCoolingHoseQuery &&
+                                requestsJoinerOrCoupler &&
+                                !isRelevantJoinerProduct
+                            ) {
+                                return false;
+                            }
+
+                            // Keep the existing thresholds unless the product
+                            // has a credible match for the requested cooling category.
                             if (isPipeTubeSearch) {
                                 if (titleMatches < 1 || item.score < 20) {
                                     return false;
                                 }
-                            } else if (titleMatches < 2 || item.score < 40) {
+                            } else if (
+                                !isCoolingCategoryMatch &&
+                                !(isCoolingHoseQuery && requestsJoinerOrCoupler && isRelevantJoinerProduct) &&
+                                (titleMatches < 2 || item.score < 40)
+                            ) {
                                 return false;
                             }
 
@@ -1701,6 +1814,26 @@ const reducerAlternativeResults = queryIsSiliconeReducer && siliconeReducerResul
             );
     }).slice(0, 5)
     : [];
+const coolingHoseAlternativeResults = queryIsCoolingHoseJoiner
+    ? ranked.filter(item => {
+        const title = String(item.product.title || "");
+        return /\bheater hose\b/i.test(title) &&
+            !/\bT[\s-]*piece\b/i.test(title);
+    }).slice(0, 3)
+    : [];
+
+const coolingTPieceAlternativeResults = queryIsCoolingHoseJoiner
+    ? ranked.filter(item =>
+        /\bheater hose\b.*\bT[\s-]*piece\b|\bT[\s-]*piece\b.*\bheater hose\b/i
+            .test(String(item.product.title || ""))
+    ).slice(0, 3)
+    : [];
+
+const coolingAlternativeResults = [
+    ...coolingHoseAlternativeResults,
+    ...coolingTPieceAlternativeResults
+];
+
 const alternativeResults = queryIsHoseEnd
     ? ranked.filter(item => {
         const product = item.product;
@@ -1736,9 +1869,11 @@ const alternativeResults = queryIsHoseEnd
     }).slice(0, 3)
     : [];
 
-const results = queryIsHoseEnd
-    ? exactResults.concat(alternativeResults)
-    : queryIsSiliconeReducer
+const results = queryIsCoolingHoseJoiner
+    ? exactResults.concat(coolingAlternativeResults)
+    : queryIsHoseEnd
+        ? exactResults.concat(alternativeResults)
+        : queryIsSiliconeReducer
         ? (siliconeReducerResults.length
             ? siliconeReducerResults
             : reducerAlternativeResults)
@@ -1786,7 +1921,31 @@ const results = queryIsHoseEnd
                 return;
             }
 
-            if (!results.length) {
+            const conversationFollowUp = window.ssrV7Conversation
+                ? window.ssrV7Conversation.getFollowUp(query)
+                : null;
+
+            if (conversationFollowUp) {
+                pendingFollowUpQuery = query;
+                pendingFollowUpType = conversationFollowUp.type;
+
+                const optionButtons = conversationFollowUp.options.map(option =>
+                    '<button type="button" onclick="quickAsk(\'' +
+                    option +
+                    '\')">' +
+                    option +
+                    '</button>'
+                ).join("");
+
+                bubble.innerHTML =
+                    '<div class="message-label">SS RACETECH V7</div>' +
+                    '<p>' + conversationFollowUp.question + '</p>' +
+                    '<div class="v7-conversation-choices">' +
+                    optionButtons +
+                    '</div>';
+                return;
+            }
+            if (!results.length && !queryIsCoolingHoseJoiner) {
                 bubble.innerHTML =
                     '<div class="message-label">SS RACETECH V7</div>' +
                     '<p>I couldn\'t find a confident match for that search. Try a product name, brand, SKU or size.</p>';
@@ -1804,6 +1963,26 @@ const results = queryIsHoseEnd
                       '</div>' +
                       '<h3>Can\'t find the exact size?</h3>' +
                       '<p>Contact SS Racetech and we\'ll help you look at your options.</p>'
+                    : queryIsCoolingHoseJoiner
+                    ? (exactResults.length
+                        ? '<h3>Exact Matches</h3><div class="v7-results">' +
+                            exactResults.map(item => productCard(item.product)).join("") +
+                            '</div>'
+                        : '<p>No exact cooling hose joiner match was found.</p>') +
+                      (coolingHoseAlternativeResults.length
+                        ? '<h3>Related alternative ? Heater hose</h3>' +
+                            '<p>These are heater hose products, not confirmed joiners.</p>' +
+                            '<div class="v7-results">' +
+                            coolingHoseAlternativeResults.map(item => productCard(item.product)).join("") +
+                            '</div>'
+                        : '') +
+                      (coolingTPieceAlternativeResults.length
+                        ? '<h3>Related alternative ? Heater hose T-piece</h3>' +
+                            '<p>This is a T-piece option, not a confirmed exact cooling-hose joiner match.</p>' +
+                            '<div class="v7-results">' +
+                            coolingTPieceAlternativeResults.map(item => productCard(item.product)).join("") +
+                            '</div>'
+                        : '')
                     : queryIsHoseEnd
                     ? (exactResults.length
                         ? '<h3>Exact Matches</h3><div class="v7-results">' +
