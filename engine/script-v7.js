@@ -34,6 +34,14 @@ function normalise(text) {
         .replace(/\bally\b/g, "aluminium")
         .replace(/\baluminum\b/g, "aluminium")
         .replace(/\btubing\b/g, "tube")
+        .replace(/\bpiping\b/g, "pipe")
+        .replace(/\bpipes\b/g, "pipe")
+        .replace(/\btubes\b/g, "tube")
+        .replace(/\belbows\b/g, "elbow")
+        .replace(/\bbends\b/g, "bend")
+        .replace(/\bstraight-length\b/g, "straight")
+        .replace(/\b90\s*degree\b/g, "90 degree")
+        .replace(/\b45\s*degree\b/g, "45 degree")
         .replace(/\bhardline\b/g, "hard line")
         .replace(/\bbrakeline\b/g, "brake line")
         .replace(/<[^>]*>/g, " ")
@@ -109,7 +117,9 @@ function scoreSpecifications(product, query) {
         }
     }
 
-    // Match requested inch sizes precisely: 3 inches is not 3.5 inches.
+
+    // Match requested inch sizes precisely, preferring the product title
+    // over broad catalogue categories and metadata.
     function extractInchSizes(text) {
         const sizes = [];
         const pattern =
@@ -123,25 +133,36 @@ function scoreSpecifications(product, query) {
     }
 
     const requestedSizes = extractInchSizes(rawQuery);
+    const productTitleText = String(product.title || "");
+    const titleSizes = extractInchSizes(productTitleText);
     const productSizes = extractInchSizes(productText);
 
     if (requestedSizes.length) {
-        const sizeMatches = requestedSizes.every(size =>
-            productSizes.some(productSize =>
+        for (const size of requestedSizes) {
+            const exactTitleSize = titleSizes.some(productSize =>
                 Math.abs(productSize - size) < 0.01
-            )
-        );
+            );
 
-        if (sizeMatches) {
-            bonus += 100;
-        } else if (productSizes.length) {
-            bonus -= 40;
+            const exactOtherSize = titleSizes.length === 0 &&
+                productSizes.some(productSize =>
+                    Math.abs(productSize - size) < 0.01
+                );
+
+            if (exactTitleSize || exactOtherSize) {
+                bonus += 100;
+            } else if (titleSizes.length || productSizes.length) {
+                bonus -= 40;
+            }
         }
     }
 
-    // Match the requested bend or elbow angle.
+    // Match the requested bend or elbow angle, preferring title evidence.
     const requestedAngles = [
         ...rawQuery.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0)/gi)
+    ].map(match => Number(match[1]));
+
+    const titleAngles = [
+        ...productTitleText.matchAll(/\b(\d{1,3})\s*(?:degrees?|deg\b|\u00B0)/gi)
     ].map(match => Number(match[1]));
 
     const productAngles = [
@@ -149,12 +170,17 @@ function scoreSpecifications(product, query) {
     ].map(match => Number(match[1]));
 
     for (const angle of requestedAngles) {
-        if (productAngles.includes(angle)) {
+        const exactTitleAngle = titleAngles.includes(angle);
+        const exactOtherAngle = titleAngles.length === 0 &&
+            productAngles.includes(angle);
+
+        if (exactTitleAngle || exactOtherAngle) {
             bonus += 70;
-        } else if (productAngles.length) {
+        } else if (titleAngles.length || productAngles.length) {
             bonus -= 25;
         }
     }
+
 
     // Match metric dimensions such as M8 x 70 exactly.
     const metricPattern =
@@ -197,6 +223,17 @@ function scoreSpecifications(product, query) {
 
         const title = normalise(product.title);
         const vendor = normalise(product.vendor);
+
+        // Treat pipe and tube as related search terms across the catalogue.
+        // This is a ranking aid only; it does not override size, angle,
+        // material, or product-shape checks.
+        const asksForPipe = /\bpipe\b/.test(q);
+        const asksForTube = /\btube\b/.test(q);
+        const productMentionsPipe = /\bpipe\b/.test(title);
+        const productMentionsTube = /\btube\b/.test(title);
+        const pipeTubeEquivalent =
+            (asksForPipe && productMentionsTube) ||
+            (asksForTube && productMentionsPipe);
         const type = normalise(
             String(product.type || "") + " " +
             String(product.category || "")
@@ -292,6 +329,8 @@ function scoreSpecifications(product, query) {
         }
 
         let score = 0;
+
+        if (pipeTubeEquivalent) score += 8;
 
         // Air-filter intent: match the requested intake neck size.
         const wantsAirFilter =
@@ -918,6 +957,7 @@ const ranked = products
 
         if (useTubePriority || useBendPriority) {
             const getPriorityDetails = item => {
+                const productTitle = normalise(item.product.title || "");
                 const title = normalise([
                     item.product.title,
                     item.product.type,
@@ -934,12 +974,12 @@ const ranked = products
                     sizes.some(size => Math.abs(size - requestedSize) < 0.01);
 
                 const hasAluminium =
-                    /\baluminium\b|\baluminum\b/.test(title);
-                const hasStainless = /\bstainless\b/.test(title);
-                const hasSilicone = /\bsilicone\b/.test(title);
+                    /\baluminium\b|\baluminum\b/.test(productTitle);
+                const hasStainless = /\bstainless\b/.test(productTitle);
+                const hasSilicone = /\bsilicone\b/.test(productTitle);
                 const hasSteel =
-                    /\bsteel\b/.test(title) && !hasStainless;
-                const hasPlastic = /\bplastic\b|\bnylon\b/.test(title);
+                    /\bsteel\b/.test(productTitle) && !hasStainless;
+                const hasPlastic = /\bplastic\b|\bnylon\b/.test(productTitle);
 
                 const materialMatches =
                     requestedMaterial === "aluminium" ? hasAluminium :
@@ -1013,8 +1053,10 @@ const ranked = products
             const priorityA = getPriorityDetails(a);
             const priorityB = getPriorityDetails(b);
 
-            // Tube searches: requested material first, then genuine product
-            // type and exact size. This works across catalogue brands.
+
+            // Tube searches: prioritise requested material, angle,
+            // exact diameter, then the genuine tube/bend product type.
+            // These rules apply across brands and catalogue categories.
             if (useTubePriority) {
                 if (
                     requestedMaterial &&
@@ -1023,13 +1065,13 @@ const ranked = products
                     return priorityA.materialRank - priorityB.materialRank;
                 }
 
-                if (priorityA.tubeRank !== priorityB.tubeRank) {
-                    return priorityA.tubeRank - priorityB.tubeRank;
+                if (
+                    requestedAngle !== null &&
+                    priorityA.angleRank !== priorityB.angleRank
+                ) {
+                    return priorityA.angleRank - priorityB.angleRank;
                 }
-            }
 
-            // Preserve size and angle priorities for bend/elbow searches.
-            if (useBendPriority) {
                 if (
                     requestedSize !== null &&
                     priorityA.exactSize !== priorityB.exactSize
@@ -1037,6 +1079,14 @@ const ranked = products
                     return priorityA.exactSize ? -1 : 1;
                 }
 
+                if (priorityA.tubeRank !== priorityB.tubeRank) {
+                    return priorityA.tubeRank - priorityB.tubeRank;
+                }
+            }
+
+            // Bend/elbow searches: prioritise requested material,
+            // then angle and exact diameter.
+            if (useBendPriority) {
                 if (
                     requestedMaterial &&
                     priorityA.materialRank !== priorityB.materialRank
@@ -1047,8 +1097,16 @@ const ranked = products
                 if (priorityA.angleRank !== priorityB.angleRank) {
                     return priorityA.angleRank - priorityB.angleRank;
                 }
+
+                if (
+                    requestedSize !== null &&
+                    priorityA.exactSize !== priorityB.exactSize
+                ) {
+                    return priorityA.exactSize ? -1 : 1;
+                }
             }
         }
+
         if (requestedMetric && a.exactMetric !== b.exactMetric) {
             return a.exactMetric ? -1 : 1;
         }
@@ -1056,6 +1114,8 @@ const ranked = products
         return b.score - a.score ||
             a.product.title.localeCompare(b.product.title);
     });
+
+
 
 
 // V7 EXPLICIT AN CONNECTION GUARD
@@ -1087,6 +1147,53 @@ if (
             "i"
         ).test(evidence);
 
+        // Some catalogue adapters describe their AN end as "-6 Flare".
+        // Accept that wording only when the product also identifies NPT.
+        const requestedNPT = /\bNPT\b/i.test(query);
+        const explicitFlareConnection =
+            requestedNPT &&
+            /\bNPT\b/i.test(evidence) &&
+            new RegExp(
+                "-\\s*0?" + requestedANSize + "\\s*flare\\b",
+                "i"
+            ).test(evidence);
+
+        // When NPT size is specified, require that same size and thread
+        // standard in the product evidence, not merely an AN-size match.
+        const requestedNPTSize = requestedNPT
+            ? query.match(/\b\d+\s*\/\s*\d+|\b\d+(?:\.\d+)?/i)
+            : null;
+
+        // Use original catalogue wording for thread sizes so fractions
+        // such as 1/2 are not lost by normalise().
+        const rawEvidence = [
+            item.product.title || "",
+            plainText(item.product.description || "")
+        ].join(" ");
+
+        const evidenceHasInvertedFlare =
+            /\binverted\s+flare\b/i.test(rawEvidence);
+
+        const evidenceNPTSizeMatches = requestedNPTSize
+            ? new RegExp(
+                "(?<![\\d.])" +
+                requestedNPTSize[0].replace(/\s+/g, "") +
+                "\\s*(?:[\u0022\u2033]|in(?:ch(?:es)?)?\\b)?\\s*NPT\\b|" +
+                "\\bNPT\\s*(?:" +
+                requestedNPTSize[0].replace(/\s+/g, "") +
+                ")",
+                "i"
+            ).test(rawEvidence)
+            : /\bNPT\b/i.test(rawEvidence);
+
+        const nptSizeMatches =
+            !requestedNPT ||
+            (
+                /\bNPT\b/i.test(rawEvidence) &&
+                !evidenceHasInvertedFlare &&
+                evidenceNPTSizeMatches
+            );
+
         const genuineHoseEnd =
             /\bhose[\s-]*ends?\b|\bhoseend\b/i.test(title) &&
             !/\bhose[\s-]*tails?\b/i.test(title);
@@ -1101,10 +1208,54 @@ if (
             genuineHoseEnd &&
             titleSizeTokens.includes(requestedANSize);
 
-        return explicitANConnection || correctlySizedHoseEnd;
+        return (explicitANConnection || correctlySizedHoseEnd || explicitFlareConnection) && nptSizeMatches;
     });
 
     ranked.splice(0, ranked.length, ...verifiedANResults);
+// V7 STRICT FILTER FOR EXPLICIT AN-TO-NPT CONNECTION REQUESTS
+// Require both requested connection sizes to be confirmed in the
+// original catalogue title or description.
+const strictANRequest = query.match(/(?:^|\s)-\s*0?(\d{1,2})\s*AN\b/i);
+const strictNPTRequest = query.match(/\b(\d+\s*\/\s*\d+|\d+(?:\.\d+)?)\s*NPT\b/i);
+
+if (
+    strictANRequest &&
+    strictNPTRequest &&
+    !queryIsHoseEnd &&
+    !queryIsHardline &&
+    !queryIsBrakeLine
+) {
+    const strictANSize = Number(strictANRequest[1]);
+    const strictNPTSize = strictNPTRequest[1].replace(/\s+/g, "");
+    const escapedNPTSize = strictNPTSize.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const strictConnectionResults = ranked.filter(item => {
+        const rawEvidence = [
+            item.product.title || "",
+            plainText(item.product.description || "")
+        ].join(" ");
+
+        const hasExactNPT = new RegExp(
+            "(?<![\\d.])" + escapedNPTSize +
+            "\\s*[\\\"\\u2033]*\\s*(?:in(?:ch(?:es)?)?\\b\\s*)?NPT\\b|" +
+            "\\bNPT\\s*" + escapedNPTSize + "(?![\\d.])",
+            "i"
+        ).test(rawEvidence);
+
+        const hasExactAN = new RegExp(
+            "(?:-\\s*0?" + strictANSize +
+            "\\s*AN\\b|\\bAN\\s*-\\s*0?" + strictANSize +
+            "\\b|-\\s*0?" + strictANSize + "\\s*flare\\b)",
+            "i"
+        ).test(rawEvidence);
+
+        const isInvertedFlare = /\binverted\s+flare\b/i.test(rawEvidence);
+
+        return hasExactNPT && hasExactAN && !isInvertedFlare;
+    });
+
+    ranked.splice(0, ranked.length, ...strictConnectionResults);
+}
 }
 
 // Keep aluminium donut searches strictly within the requested product type.
@@ -1318,16 +1469,185 @@ const exactResults =
                             !["the", "and", "for", "with", "need", "want", "find", "me", "please"].includes(term)
                         );
 
+
+
+                    const queryTextForFallback = normalise(query);
+
+                    const queryNeedsPipeShape =
+                        /\b(pipe|piping|tube|tubing|intake|bend|bends|elbow|elbows)\b/i.test(queryTextForFallback) &&
+                        (
+                            /\b(45|60|90|180)\s*(?:degrees?|deg\b|\u00B0)/i.test(queryTextForFallback) ||
+                            /\bstraight\b/i.test(queryTextForFallback) ||
+                            /\b\d+(?:\.\d+)?\s*(?:inch(?:es)?|in\b|")/i.test(queryTextForFallback) ||
+                            /\b(aluminium|aluminum|stainless|silicone|steel|plastic|nylon)\b/i.test(queryTextForFallback)
+                        );
+
+                    const requestedFallbackSizeMatch = queryTextForFallback.match(
+                        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\b|")/i
+                    );
+                    const requestedFallbackSize = requestedFallbackSizeMatch
+                        ? Number(requestedFallbackSizeMatch[1])
+                        : null;
+
+                    const requestedFallbackAngleMatch = queryTextForFallback.match(
+                        /\b(45|60|90|180)\s*(?:degrees?|deg\b|\u00B0)/i
+                    );
+                    const requestedFallbackAngle = requestedFallbackAngleMatch
+                        ? Number(requestedFallbackAngleMatch[1])
+                        : null;
+
+                    const requestedFallbackMaterial =
+                        /\baluminium\b|\baluminum\b/i.test(queryTextForFallback) ? "aluminium" :
+                        /\bstainless\b/i.test(queryTextForFallback) ? "stainless" :
+                        /\bsilicone\b/i.test(queryTextForFallback) ? "silicone" :
+                        /\bsteel\b/i.test(queryTextForFallback) ? "steel" :
+                        /\bplastic\b|\bnylon\b/i.test(queryTextForFallback) ? "plastic" : "";
+
+
                     const generalResults = queryTerms.length >= 3
                         ? ranked.filter(item => {
-                            const title = normalise(item.product.title || "");
+                            const product = item.product;
+                            const rawTitle = String(product.title || "");
+const title = normalise(rawTitle);
+
+                            const titleWords = title.split(/\s+/);
                             const titleMatches = queryTerms.filter(term =>
-                                title.split(/\s+/).includes(term)
+                                titleWords.includes(term)
                             ).length;
 
-                            return titleMatches >= 2 && item.score >= 40;
+                            const isPipeTubeSearch =
+                                /\b(pipe|piping|tube|tubing)\b/i.test(queryTextForFallback);
+
+                            // Allow broader discovery for general pipe/tube searches.
+                            // The shape, size, angle and material checks below
+                            // still decide which products can pass.
+                            if (isPipeTubeSearch) {
+                                if (titleMatches < 1 || item.score < 20) {
+                                    return false;
+                                }
+                            } else if (titleMatches < 2 || item.score < 40) {
+                                return false;
+                            }
+
+                            if (queryNeedsPipeShape) {
+                                const isRelevantShape =
+                                    /\b(pipe|piping|tube|tubing|bend|bends|elbow|elbows)\b/i.test(title);
+
+                                const isUnrelatedAccessory =
+                                    /\b(water neck|adapter|adaptor|valve|bracket|clamp|fitting|connector|bulkhead|thermostat)\b/i.test(title);
+
+                                const isStraightProduct =
+                                    /\b(straight|straight-length)\b/i.test(title);
+
+                                const requestsBend =
+                                    /\b(bend|bends|elbow|elbows)\b/i.test(queryTextForFallback);
+
+                                const requestsStraight =
+                                    /\bstraight\b/i.test(queryTextForFallback);
+
+                                const requestsGenericPipe =
+                                    /\b(pipe|piping|tube|tubing|intake)\b/i.test(queryTextForFallback) &&
+                                    !requestsBend &&
+                                    requestedFallbackAngle === null &&
+                                    !requestsStraight;
+
+                                const isBendProduct =
+                                    /\b(bend|bends|elbow|elbows)\b/i.test(title);
+
+                                if (!isRelevantShape || isUnrelatedAccessory) {
+                                    return false;
+                                }
+
+                                // A straight-tube request must return straight products.
+                                if (requestsStraight && (!isStraightProduct || isBendProduct)) {
+                                    return false;
+                                }
+
+                                // A general pipe/tube request should prioritise
+                                // straight pipe rather than bends or elbows.
+                                if (requestsGenericPipe && (isBendProduct || isStraightProduct === false && /\b(clamp|bracket|valve|adapter|adaptor)\b/i.test(title))) {
+                                    return false;
+                                }
+
+                                // An explicit bend/elbow search must not return
+                                // a straight length of tube.
+                                if (
+                                    requestsBend &&
+                                    (!isBendProduct || isStraightProduct)
+                                ) {
+                                    return false;
+                                }
+
+                                // Extract specifications from the product title.
+                                const productSizes = [
+    ...rawTitle.matchAll(
+        /\b(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in\.?\b|["\u2033])/gi
+    )
+].map(match => Number(match[1]));
+
+                                const productAngles = [
+    ...rawTitle.matchAll(
+        /\b(45|60|90|180)\s*(?:degrees?|deg\b|\u00B0)/gi
+    )
+].map(match => Number(match[1]));
+
+                                // Reject a conflicting diameter whenever the
+                                // title explicitly gives a diameter.
+                                if (
+                                    requestedFallbackSize !== null &&
+                                    productSizes.length > 0 &&
+                                    !productSizes.some(size =>
+                                        Math.abs(size - requestedFallbackSize) < 0.01
+                                    )
+                                ) {
+                                    return false;
+                                }
+
+                                // Reject a conflicting angle whenever the
+                                // title explicitly gives an angle.
+                                if (
+                                    requestedFallbackAngle !== null &&
+                                    productAngles.length > 0 &&
+                                    !productAngles.includes(requestedFallbackAngle)
+                                ) {
+                                    return false;
+                                }
+
+                                // Straight products cannot satisfy an angled
+                                // pipe/bend search.
+                                if (
+                                    requestedFallbackAngle !== null &&
+                                    isStraightProduct
+                                ) {
+                                    return false;
+                                }
+
+                                // Keep material matching generic across brands.
+                                if (requestedFallbackMaterial) {
+                                    const hasRequestedMaterial =
+                                        requestedFallbackMaterial === "aluminium"
+                                            ? /\baluminium\b|\baluminum\b/i.test(title)
+                                            : requestedFallbackMaterial === "stainless"
+                                            ? /\bstainless\b/i.test(title)
+                                            : requestedFallbackMaterial === "silicone"
+                                            ? /\bsilicone\b/i.test(title)
+                                            : requestedFallbackMaterial === "steel"
+                                            ? /\bsteel\b/i.test(title) &&
+                                              !/\bstainless\b/i.test(title)
+                                            : /\bplastic\b|\bnylon\b/i.test(title);
+
+                                    if (!hasRequestedMaterial) {
+                                        return false;
+                                    }
+                                }
+                            }
+
+                            return true;
                         })
                         : ranked;
+
+
+
 
                     const seen = new Set();
 
@@ -1530,23 +1850,3 @@ const results = queryIsHoseEnd
         }
     });
 })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
