@@ -27,6 +27,142 @@
     }
 
 
+function buildProductIntro(results, query) {
+    const items = (results || [])
+        .slice(0, 3)
+        .map(item => item.product || item)
+        .filter(Boolean);
+
+    if (!items.length) {
+        return "";
+    }
+
+    const cleanQuery = plainText(query)
+        .replace(/[.!?]+$/, "")
+        .trim();
+
+    const firstTitle = plainText(items[0].title);
+
+    const introStart = cleanQuery
+        ? "I've found catalogue options for " + escapeHTML(cleanQuery) + "."
+        : "I've found some options in our catalogue.";
+
+    let intro = "<p>" + introStart;
+
+    if (firstTitle) {
+        intro += " The top result is " + escapeHTML(firstTitle) + ".";
+    }
+
+    const stopWords = new Set([
+        "the", "and", "for", "with", "our", "you", "your",
+        "from", "that", "this", "are", "was", "were", "need",
+        "want", "find", "looking", "please", "some", "more",
+        "option", "options", "product", "products", "part",
+        "parts", "collection", "collections", "accessory",
+        "accessories", "motor", "vehicle", "inch", "inches",
+        "degree", "degrees", "mm", "black", "silver"
+    ]);
+
+    function getTerms(value) {
+        return [...new Set(
+            normalise(plainText(value))
+                .split(/\s+/)
+                .filter(word =>
+                    word.length > 1 &&
+                    !/^\d+(?:\.\d+)?$/.test(word) &&
+                    !stopWords.has(word)
+                )
+        )];
+    }
+
+    const queryTerms = getTerms(cleanQuery);
+
+    const productContext = items.map(item => [
+        item.title,
+        item.type,
+        item.tags,
+        item.description,
+        item.subtype,
+        item.family,
+        item.brand
+    ].map(value => plainText(value || "")).join(" ")).join(" ");
+
+    const productTerms = getTerms(productContext);
+    const collections = Array.isArray(window.ssrV7Collections)
+        ? window.ssrV7Collections
+        : [];
+
+    const matches = collections.map(collection => {
+        const title = plainText(collection.title);
+        const url = String(collection.url || "");
+        const collectionTerms = getTerms(title);
+
+        if (
+            !title ||
+            !/^https:\/\/racereadygear\.com\.au\/collections\/[a-z0-9-]+\/?$/i.test(url)
+        ) {
+            return null;
+        }
+
+        const queryAngleMatch = cleanQuery.match(/(?:^|\D)(45|60|90|120|135|180)\s*(?:degrees?|deg\b|°)/i);
+        const collectionAngleMatch = title.match(/(?:^|\D)(45|60|90|120|135|180)\s*(?:degrees?|deg\b|°)/i);
+
+        const queryAngle = queryAngleMatch ? Number(queryAngleMatch[1]) : null;
+        const collectionAngle = collectionAngleMatch ? Number(collectionAngleMatch[1]) : null;
+
+        if (
+            queryAngle !== null &&
+            collectionAngle !== null &&
+            queryAngle !== collectionAngle
+        ) {
+            return null;
+        }
+
+        let score = 0;
+
+        for (const term of collectionTerms) {
+            if (queryTerms.includes(term)) score += 3;
+            if (productTerms.includes(term)) score += 1;
+        }
+
+        return { title, url, score };
+    })
+    .filter(collection => collection && collection.score >= 4)
+    .sort((a, b) => b.score - a.score);
+
+    const selected = [];
+    const seenHandles = new Set();
+
+    for (const collection of matches) {
+        const handle = collection.url
+            .replace(/\/+$/, "")
+            .split("/")
+            .pop();
+
+        if (seenHandles.has(handle)) continue;
+
+        selected.push(collection);
+        seenHandles.add(handle);
+
+        if (selected.length >= 2) break;
+    }
+
+    if (selected.length) {
+        intro += " Explore related collections: " +
+            selected.map(collection =>
+                '<a href="' + escapeHTML(collection.url) + '">' +
+                escapeHTML(collection.title) +
+                "</a>"
+            ).join(" or ") +
+            ".";
+    }
+
+    intro +=
+        " Check each listing for the exact dimensions, materials and specifications before ordering.</p>";
+
+    return intro;
+}
+
 function normalise(text) {
     return String(text || "")
         .toLowerCase()
@@ -1026,12 +1162,15 @@ const ranked = products
 
         if (useTubePriority || useBendPriority) {
             const getPriorityDetails = item => {
-                const productTitle = normalise(item.product.title || "");
                 const title = normalise([
                     item.product.title,
                     item.product.type,
                     item.product.category
                 ].join(" "));
+
+                const materialText = normalise(
+                    title + " " + String(item.product.tags || "")
+                );
 
                 const sizes = [
                     ...title.matchAll(
@@ -1043,13 +1182,12 @@ const ranked = products
                     sizes.some(size => Math.abs(size - requestedSize) < 0.01);
 
                 const hasAluminium =
-                    /\baluminium\b|\baluminum\b/.test(productTitle);
-                const hasStainless = /\bstainless\b/.test(productTitle);
-                const hasSilicone = /\bsilicone\b/.test(productTitle);
+                    /\baluminium\b|\baluminum\b/.test(materialText);
+                const hasStainless = /\bstainless\b/.test(materialText);
+                const hasSilicone = /\bsilicone\b/.test(materialText);
                 const hasSteel =
-                    /\bsteel\b/.test(productTitle) && !hasStainless;
-                const hasPlastic = /\bplastic\b|\bnylon\b/.test(productTitle);
-
+                    /\bsteel\b/.test(materialText) && !hasStainless;
+                const hasPlastic = /\bplastic\b|\bnylon\b/.test(materialText);
                 const materialMatches =
                     requestedMaterial === "aluminium" ? hasAluminium :
                     requestedMaterial === "stainless" ? hasStainless :
@@ -1080,16 +1218,21 @@ const ranked = products
                     /\b(clamps?|separators?|valves?|fittings?|adapters?|adaptors?|brackets?|holders?|clips?|retainers?|mounts?|connectors?|couplers?|reducers?)\b/i
                         .test(title);
 
+                const isFabricatedShape =
+    /\b(half\s*donut|donut|pie\s*cut|oval\s*tub(?:e|ing)|oval\s*exhaust)\b/i.test(title);
                 const isTubeProduct =
                     /\b(tube|tubing|pipe|piping)\b/i.test(title) &&
-                    !isAccessory;
+                    !isAccessory &&
+                    !isFabricatedShape;
 
                 const isStraight = isTubeProduct &&
-                    /\bstraight\b/i.test(title) &&
+                    (/\bstraight\b/i.test(title) ||
+                     /\btube\b/i.test(title) && !/\b(elbow|bend|bends|coupler)\b/i.test(title)) &&
                     !/\b(elbow|bend|bends|coupler)\b/i.test(title);
 
-                const isBend = isTubeProduct &&
-                    /\b(elbow|bend|bends)\b/i.test(title);
+                const isBend =
+                    /\b(elbow|bend|bends)\b/i.test(title) &&
+                    !isAccessory;
 
                 // Lower rank is better:
                 // exact-size straight, exact-size bend, other exact-size
@@ -1134,11 +1277,16 @@ const ranked = products
                     return priorityA.materialRank - priorityB.materialRank;
                 }
 
-                if (
+                                if (
                     requestedAngle !== null &&
                     priorityA.angleRank !== priorityB.angleRank
                 ) {
                     return priorityA.angleRank - priorityB.angleRank;
+                }
+
+                // Prefer product shape before exact size for tube searches.
+                if (priorityA.tubeRank !== priorityB.tubeRank) {
+                    return priorityA.tubeRank - priorityB.tubeRank;
                 }
 
                 if (
@@ -1146,10 +1294,6 @@ const ranked = products
                     priorityA.exactSize !== priorityB.exactSize
                 ) {
                     return priorityA.exactSize ? -1 : 1;
-                }
-
-                if (priorityA.tubeRank !== priorityB.tubeRank) {
-                    return priorityA.tubeRank - priorityB.tubeRank;
                 }
             }
 
@@ -1165,6 +1309,12 @@ const ranked = products
 
                 if (priorityA.angleRank !== priorityB.angleRank) {
                     return priorityA.angleRank - priorityB.angleRank;
+                }
+
+                                // For tube searches, prefer the correct product shape
+                // before exact-size matches on fabricated assemblies.
+                if (priorityA.tubeRank !== priorityB.tubeRank) {
+                    return priorityA.tubeRank - priorityB.tubeRank;
                 }
 
                 if (
@@ -1996,7 +2146,8 @@ const results = queryIsCoolingHoseJoiner
                             alternativeResults.map(item => productCard(item.product)).join("") +
                             '</div>'
                         : '')
-                    : `<p>Found ${results.length} relevant catalogue result${results.length === 1 ? "" : "s"}:</p>` +
+                    : buildProductIntro(results, query) +
+  `<p>Found ${results.length} relevant catalogue result${results.length === 1 ? "" : "s"}:</p>` +
                       '<div class="v7-results">' +
                       results.map(item => productCard(item.product)).join("") +
                       '</div>');

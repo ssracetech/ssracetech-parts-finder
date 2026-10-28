@@ -1,0 +1,942 @@
+﻿[
+    {
+        "title":  "Race Suits, Motorsport Apparel \u0026 Accessories",
+        "handle":  "apparel",
+        "url":  "https://racereadygear.com.au/collections/apparel"
+    },
+    {
+        "title":  "Bearings \u0026 Seals",
+        "handle":  "bearings-and-seals",
+        "url":  "https://racereadygear.com.au/collections/bearings-and-seals"
+    },
+    {
+        "title":  "Brakes \u0026 Pedals - Brake Lines, Fittings \u0026 Components",
+        "handle":  "brakes-and-pedals",
+        "url":  "https://racereadygear.com.au/collections/brakes-and-pedals"
+    },
+    {
+        "title":  "Lubricants \u0026 Chemicals",
+        "handle":  "chemicals-lube",
+        "url":  "https://racereadygear.com.au/collections/chemicals-lube"
+    },
+    {
+        "title":  "Metric \u0026 Imperial Fasteners - Bolts, Nuts \u0026 Washers",
+        "handle":  "metric-imperial-fasteners",
+        "url":  "https://racereadygear.com.au/collections/metric-imperial-fasteners"
+    },
+    {
+        "title":  "Custom Engines - Engine Rebuilds \u0026 Performance Builds",
+        "handle":  "engines",
+        "url":  "https://racereadygear.com.au/collections/engines"
+    },
+    {
+        "title":  "Fabrication Parts - Tube, Weld Tabs \u0026 Mounting Hardware",
+        "handle":  "fabrication",
+        "url":  "https://racereadygear.com.au/collections/fabrication"
+    },
+    {
+        "title":  "Speedflow AN Fittings, Hose Ends \u0026 Adapters",
+        "handle":  "speedflow-fittings",
+        "url":  "https://racereadygear.com.au/collections/speedflow-fittings"
+    },
+    {
+        "title":  "Safety Equipment \u0026 Motorsport Accessories",
+        "handle":  "safety-equipment",
+        "url":  "https://racereadygear.com.au/collections/safety-equipment"
+    },
+    {
+        "title":  "Rod Ends \u0026 Uniballs - FK Heim Joints",
+        "handle":  "rod-ends-and-uniballs",
+        "url":  "https://racereadygear.com.au/collections/rod-ends-and-uniballs"
+    },
+    {
+        "title":  "Tyres \u0026 Wheels",
+        "handle":  "tyres-and-wheels",
+        "url":  "https://racereadygear.com.au/collections/tyres-and-wheels"
+    },
+    {
+        "title":  "Shocks \u0026 Springs",
+        "handle":  "shocks-and-wheels",
+        "url":  "https://racereadygear.com.au/collections/shocks-and-wheels"
+    },
+    {
+        "title":  "Steering \u0026 Shifters - Steering U-Joints \u0026 Transmission Shifters",
+        "handle":  "steering-and-shifters",
+        "url":  "https://racereadygear.com.au/collections/steering-and-shifters"
+    },
+    {
+        "title":  "Suspension Parts - Rod Ends, Uniballs, Bushes \u0026 Limiting Straps",
+        "handle":  "suspension",
+        "url":  "https://racereadygear.com.au/collections/suspension"
+    },
+    {
+        "title":  "SS Racetech Rods \u0026 Customs - Custom Hot Rods \u0026 Australian built Race Cars",
+        "handle":  "ss-racetech-cars",
+        "url":  "https://racereadygear.com.au/collections/ss-racetech-cars"
+    },
+    {
+        "title":  "Electrical Components - Ignition, Alternators \u0026 Wiring",
+        "handle":  "electrical",
+        "url":  "https://racereadygear.com.au/collections/electrical"
+    },
+    {
+        "title":  "Engine Accessories - Performance Parts \u0026 Upgrades",
+        "handle":  "engine-accessories",
+        "url":  "https://racereadygear.com.au/collections/engine-accessories"
+    },
+    {
+        "title":  "Cooling Systems - Oil Coolers, Transmission Coolers \u0026 Water Pumps",
+        "handle":  "cooling-systems",
+        "url":  "https://racereadygear.com.au/collections/cooling-systems"
+    },
+    {
+        "title":  "Workshop Consumables, Cutting \u0026 Abrasives",
+        "handle":  "workshop-consumables-cutting-and-abrasives",
+        "url":  "https://racereadygear.com.au/collections/workshop-consumables-cutting-and-abrasives"
+    },
+    {
+        "title":  "Racing Seats",
+        "handle":  "seats-2",
+        "url":  "https://racereadygear.com.au/collections/seats-2"
+    },
+    {
+        "title":  "Fuel Systems - Fuel Pumps \u0026 Regulators",
+        "handle":  "fuel-systems",
+        "url":  "https://racereadygear.com.au/collections/fuel-systems"
+    },
+    {
+        "title":  "Silicone Hose, Bends and Reducers",
+        "handle":  "silicone-hose-bends",
+        "url":  "https://racereadygear.com.au/collections/silicone-hose-bends"
+    },
+    {
+        "title":  "Proflow Intake Manifolds - LS Holden Ford",
+        "handle":  "intake-manifolds",
+        "url":  "https://racereadygear.com.au/collections/intake-manifolds"
+    },
+    {
+        "title":  "Fuel Injection, Throttle Body\u0027s \u0026 Fuel Rails",
+        "handle":  "fuel-injection-throttle-bodys-fuel-rails",
+        "url":  "https://racereadygear.com.au/collections/fuel-injection-throttle-bodys-fuel-rails"
+    },
+    {
+        "title":  "Stainless Steel \u0026 Aluminium Bends and Tube",
+        "handle":  "stainless-aluminium-bends-tube",
+        "url":  "https://racereadygear.com.au/collections/stainless-aluminium-bends-tube"
+    },
+    {
+        "title":  "Speedflow Hose - Braided Stainless Hose for Fuel, Oil \u0026 Brake",
+        "handle":  "speedflow-hose",
+        "url":  "https://racereadygear.com.au/collections/speedflow-hose"
+    },
+    {
+        "title":  "Carburettors \u0026 Accessories - Spacers, Studs \u0026 Fuel Line Kits",
+        "handle":  "carburetors-accessories",
+        "url":  "https://racereadygear.com.au/collections/carburetors-accessories"
+    },
+    {
+        "title":  "Air Cleaner Assemblies, Filter Elements \u0026 Accessories",
+        "handle":  "air-filters",
+        "url":  "https://racereadygear.com.au/collections/air-filters"
+    },
+    {
+        "title":  "ARP Fasteners - Head Studs, Main Studs \u0026 Rod Bolts",
+        "handle":  "arp-fasteners",
+        "url":  "https://racereadygear.com.au/collections/arp-fasteners"
+    },
+    {
+        "title":  "Gaskets - Intake, Exhaust \u0026 Engine Gasket Sets",
+        "handle":  "gaskets",
+        "url":  "https://racereadygear.com.au/collections/gaskets"
+    },
+    {
+        "title":  "Forced Induction",
+        "handle":  "forced-induction",
+        "url":  "https://racereadygear.com.au/collections/forced-induction"
+    },
+    {
+        "title":  "Alternators \u0026 Accessories - Brackets, Pulleys \u0026 Belts",
+        "handle":  "alternator-accessories",
+        "url":  "https://racereadygear.com.au/collections/alternator-accessories"
+    },
+    {
+        "title":  "100 Series Straight and Degree Hose Ends - Speedflow",
+        "handle":  "100-series-hose-ends-speedflow",
+        "url":  "https://racereadygear.com.au/collections/100-series-hose-ends-speedflow"
+    },
+    {
+        "title":  "Speedflow 400 Series Pushlock Hose Ends \u0026 Hose",
+        "handle":  "speedflow-400-series-fittings-at-ss-racetech-rods",
+        "url":  "https://racereadygear.com.au/collections/speedflow-400-series-fittings-at-ss-racetech-rods"
+    },
+    {
+        "title":  "Banjo\u0027s \u0026 Banjo Bolts - Speedflow",
+        "handle":  "banjo-bolts",
+        "url":  "https://racereadygear.com.au/collections/banjo-bolts"
+    },
+    {
+        "title":  "Weld on fittings - Speedflow",
+        "handle":  "weld-on-fittings",
+        "url":  "https://racereadygear.com.au/collections/weld-on-fittings"
+    },
+    {
+        "title":  "Carburettor fuel line kits - Speedflow",
+        "handle":  "carburettor-fuel-line-kits",
+        "url":  "https://racereadygear.com.au/collections/carburettor-fuel-line-kits"
+    },
+    {
+        "title":  "Aluminium Adapters - AN Fittings - Speedflow",
+        "handle":  "aluminium-adapters",
+        "url":  "https://racereadygear.com.au/collections/aluminium-adapters"
+    },
+    {
+        "title":  "Replacement olives - Speedflow",
+        "handle":  "replacement-olives",
+        "url":  "https://racereadygear.com.au/collections/replacement-olives"
+    },
+    {
+        "title":  "Firesleeve speedflow",
+        "handle":  "heat-sleeve",
+        "url":  "https://racereadygear.com.au/collections/heat-sleeve"
+    },
+    {
+        "title":  "100 Series Braided Hose - Speedflow",
+        "handle":  "100-series-braided-hose-speedflow",
+        "url":  "https://racereadygear.com.au/collections/100-series-braided-hose-speedflow"
+    },
+    {
+        "title":  "200 Series PTFE Braided Hose - Speedflow",
+        "handle":  "200-series-hose",
+        "url":  "https://racereadygear.com.au/collections/200-series-hose"
+    },
+    {
+        "title":  "200 Series Black PTFE Braided Hose - Speedflow",
+        "handle":  "200-series-teflon-black-stainless-braided-hose",
+        "url":  "https://racereadygear.com.au/collections/200-series-teflon-black-stainless-braided-hose"
+    },
+    {
+        "title":  "Engine Drives \u0026 Pulleys - Gilmer Kits, Belts \u0026 Tensioners",
+        "handle":  "drives-pulleys",
+        "url":  "https://racereadygear.com.au/collections/drives-pulleys"
+    },
+    {
+        "title":  "Water Pumps - Mechanical, Electric \u0026 Accessories",
+        "handle":  "water-pumps",
+        "url":  "https://racereadygear.com.au/collections/water-pumps"
+    },
+    {
+        "title":  "Pushrods",
+        "handle":  "pushrods",
+        "url":  "https://racereadygear.com.au/collections/pushrods"
+    },
+    {
+        "title":  "Valve covers",
+        "handle":  "valve-covers",
+        "url":  "https://racereadygear.com.au/collections/valve-covers"
+    },
+    {
+        "title":  "Water Necks \u0026 Thermostat Housings - Straight \u0026 Swivel",
+        "handle":  "billet-aluminium-water-necks",
+        "url":  "https://racereadygear.com.au/collections/billet-aluminium-water-necks"
+    },
+    {
+        "title":  "Aluminium tube 100 cm Long",
+        "handle":  "aluminium-tube",
+        "url":  "https://racereadygear.com.au/collections/aluminium-tube"
+    },
+    {
+        "title":  "Stainless Steel Tube  316 grade - Per Meter",
+        "handle":  "316-stainless-tube",
+        "url":  "https://racereadygear.com.au/collections/316-stainless-tube"
+    },
+    {
+        "title":  "Aluminium 90 degree bends",
+        "handle":  "aluminium-90-degree-bends",
+        "url":  "https://racereadygear.com.au/collections/aluminium-90-degree-bends"
+    },
+    {
+        "title":  "90 Degree Elbows \u0026 Tube Bends 316 Stainless Steel",
+        "handle":  "316-stainless-90-degree-elbow",
+        "url":  "https://racereadygear.com.au/collections/316-stainless-90-degree-elbow"
+    },
+    {
+        "title":  "Aluminium 45 degree bends",
+        "handle":  "aluminium-45-degree-bends",
+        "url":  "https://racereadygear.com.au/collections/aluminium-45-degree-bends"
+    },
+    {
+        "title":  "45 Degree Elbows \u0026 Tube Bends -316 Stainless Steel",
+        "handle":  "316-stainless-45-degree-elbow",
+        "url":  "https://racereadygear.com.au/collections/316-stainless-45-degree-elbow"
+    },
+    {
+        "title":  "Aluminium bends 135 degree",
+        "handle":  "aluminium-bends-135-degree",
+        "url":  "https://racereadygear.com.au/collections/aluminium-bends-135-degree"
+    },
+    {
+        "title":  "Aluminium bends 180 degree",
+        "handle":  "aluminium-bends-180-degree",
+        "url":  "https://racereadygear.com.au/collections/aluminium-bends-180-degree"
+    },
+    {
+        "title":  "Aluminium bends 30 degree",
+        "handle":  "aluminium-bends-30-degree",
+        "url":  "https://racereadygear.com.au/collections/aluminium-bends-30-degree"
+    },
+    {
+        "title":  "Silicone Hose Tubing Straight - Proflow Performance Couplers",
+        "handle":  "silicone-hose-tubing-straight",
+        "url":  "https://racereadygear.com.au/collections/silicone-hose-tubing-straight"
+    },
+    {
+        "title":  "Proflow 45° Silicone Elbow Couplers",
+        "handle":  "silicone-45-degree-elbow",
+        "url":  "https://racereadygear.com.au/collections/silicone-45-degree-elbow"
+    },
+    {
+        "title":  "Silicone 90 degree elbow",
+        "handle":  "silicone-90-degree-elbow",
+        "url":  "https://racereadygear.com.au/collections/silicone-90-degree-elbow"
+    },
+    {
+        "title":  "Silicone 135 degree elbow",
+        "handle":  "silicone-135-degree-elbow",
+        "url":  "https://racereadygear.com.au/collections/silicone-135-degree-elbow"
+    },
+    {
+        "title":  "Silicone 180 degree elbow",
+        "handle":  "silicone-180-degree-elbow",
+        "url":  "https://racereadygear.com.au/collections/silicone-180-degree-elbow"
+    },
+    {
+        "title":  "Silicone Reducer straight",
+        "handle":  "silicone-reducers",
+        "url":  "https://racereadygear.com.au/collections/silicone-reducers"
+    },
+    {
+        "title":  "Silicone reducer 45 degree",
+        "handle":  "silicone-reducer-45-degree",
+        "url":  "https://racereadygear.com.au/collections/silicone-reducer-45-degree"
+    },
+    {
+        "title":  "Silicone reducer 90 degree",
+        "handle":  "silicone-reducer-90-degree",
+        "url":  "https://racereadygear.com.au/collections/silicone-reducer-90-degree"
+    },
+    {
+        "title":  "Push lock hose",
+        "handle":  "push-lock-hose",
+        "url":  "https://racereadygear.com.au/collections/push-lock-hose"
+    },
+    {
+        "title":  "120 Series Start-Lite Hose - Speedflow",
+        "handle":  "startlite-performance-hose",
+        "url":  "https://racereadygear.com.au/collections/startlite-performance-hose"
+    },
+    {
+        "title":  "Speedflow Hose Tails - Female \u0026 NPT Barb Fittings",
+        "handle":  "hose-tails",
+        "url":  "https://racereadygear.com.au/collections/hose-tails"
+    },
+    {
+        "title":  "Fuel Filters \u0026 Brackets - Speedflow",
+        "handle":  "filters-brackets",
+        "url":  "https://racereadygear.com.au/collections/filters-brackets"
+    },
+    {
+        "title":  "Hose Separators and Clamps",
+        "handle":  "hose-separators",
+        "url":  "https://racereadygear.com.au/collections/hose-separators"
+    },
+    {
+        "title":  "Proflow Pie Cuts - Mandrel Bent Exhaust Elbows",
+        "handle":  "pie-cuts",
+        "url":  "https://racereadygear.com.au/collections/pie-cuts"
+    },
+    {
+        "title":  "Round bungs",
+        "handle":  "round-bungs",
+        "url":  "https://racereadygear.com.au/collections/round-bungs"
+    },
+    {
+        "title":  "V-band kits",
+        "handle":  "v-bands",
+        "url":  "https://racereadygear.com.au/collections/v-bands"
+    },
+    {
+        "title":  "Flex joints",
+        "handle":  "flex-joints",
+        "url":  "https://racereadygear.com.au/collections/flex-joints"
+    },
+    {
+        "title":  "Weld on Tabs",
+        "handle":  "weld-on-tabs",
+        "url":  "https://racereadygear.com.au/collections/weld-on-tabs"
+    },
+    {
+        "title":  "Weld In Tube Clamp Connector Coupler",
+        "handle":  "clamp-connectors",
+        "url":  "https://racereadygear.com.au/collections/clamp-connectors"
+    },
+    {
+        "title":  "Stainless steel reducers",
+        "handle":  "stainless-steel-reducers",
+        "url":  "https://racereadygear.com.au/collections/stainless-steel-reducers"
+    },
+    {
+        "title":  "Donut halves",
+        "handle":  "donut-halves",
+        "url":  "https://racereadygear.com.au/collections/donut-halves"
+    },
+    {
+        "title":  "Imperial Fasteners",
+        "handle":  "imperial-bolts",
+        "url":  "https://racereadygear.com.au/collections/imperial-bolts"
+    },
+    {
+        "title":  "Metric Fasteners",
+        "handle":  "metric-bolts",
+        "url":  "https://racereadygear.com.au/collections/metric-bolts"
+    },
+    {
+        "title":  "Metric Washers",
+        "handle":  "washers",
+        "url":  "https://racereadygear.com.au/collections/washers"
+    },
+    {
+        "title":  "Imperial Washers",
+        "handle":  "imperial-washers",
+        "url":  "https://racereadygear.com.au/collections/imperial-washers"
+    },
+    {
+        "title":  "Metric Bolts",
+        "handle":  "metric-bolts-1",
+        "url":  "https://racereadygear.com.au/collections/metric-bolts-1"
+    },
+    {
+        "title":  "Metric Nuts",
+        "handle":  "metric-nuts",
+        "url":  "https://racereadygear.com.au/collections/metric-nuts"
+    },
+    {
+        "title":  "Imperial Nuts",
+        "handle":  "imperial-nuts",
+        "url":  "https://racereadygear.com.au/collections/imperial-nuts"
+    },
+    {
+        "title":  "Exhaust system parts",
+        "handle":  "exhaust",
+        "url":  "https://racereadygear.com.au/collections/exhaust"
+    },
+    {
+        "title":  "Performance Gauges - Oil Pressure, Fuel Pressure \u0026 Temperature",
+        "handle":  "gauges",
+        "url":  "https://racereadygear.com.au/collections/gauges"
+    },
+    {
+        "title":  "Fuel Rail",
+        "handle":  "fuel-rail",
+        "url":  "https://racereadygear.com.au/collections/fuel-rail"
+    },
+    {
+        "title":  "Fuel cell",
+        "handle":  "fuel-cell",
+        "url":  "https://racereadygear.com.au/collections/fuel-cell"
+    },
+    {
+        "title":  "Fuel Regulators \u0026 Pumps",
+        "handle":  "regulator",
+        "url":  "https://racereadygear.com.au/collections/regulator"
+    },
+    {
+        "title":  "Fuel pump hangers",
+        "handle":  "fuel-pump-hangers",
+        "url":  "https://racereadygear.com.au/collections/fuel-pump-hangers"
+    },
+    {
+        "title":  "Ignition Distributors, Hold-Down Clamps \u0026 Tools",
+        "handle":  "distributors",
+        "url":  "https://racereadygear.com.au/collections/distributors"
+    },
+    {
+        "title":  "Spark Plug Leads - Ford Holden Universal",
+        "handle":  "msd-spark-plug-leads",
+        "url":  "https://racereadygear.com.au/collections/msd-spark-plug-leads"
+    },
+    {
+        "title":  "Starter Motors - Mini \u0026 Gear Reduction Options",
+        "handle":  "starter-motors",
+        "url":  "https://racereadygear.com.au/collections/starter-motors"
+    },
+    {
+        "title":  "Narva",
+        "handle":  "narva",
+        "url":  "https://racereadygear.com.au/collections/narva"
+    },
+    {
+        "title":  "Engine \u0026 Transmission Dipsticks - Braided Stainless \u0026 Billet Aluminium",
+        "handle":  "engine-dipstick",
+        "url":  "https://racereadygear.com.au/collections/engine-dipstick"
+    },
+    {
+        "title":  "Mufflers",
+        "handle":  "mufflers",
+        "url":  "https://racereadygear.com.au/collections/mufflers"
+    },
+    {
+        "title":  "Silicone Brake Duct Hose",
+        "handle":  "silicone-brake-duct-hose",
+        "url":  "https://racereadygear.com.au/collections/silicone-brake-duct-hose"
+    },
+    {
+        "title":  "Proflow Reinforced Clear PVC Hose",
+        "handle":  "proflow-reinforced-clear-pvc-hose",
+        "url":  "https://racereadygear.com.au/collections/proflow-reinforced-clear-pvc-hose"
+    },
+    {
+        "title":  "RTS Oil Pans",
+        "handle":  "rts-oil-pans",
+        "url":  "https://racereadygear.com.au/collections/rts-oil-pans"
+    },
+    {
+        "title":  "Oil Breathers",
+        "handle":  "oil-breathers",
+        "url":  "https://racereadygear.com.au/collections/oil-breathers"
+    },
+    {
+        "title":  "Gates Barricade MPI Fuel Injection Hose",
+        "handle":  "gates-barricade-mpi-fuel-hose",
+        "url":  "https://racereadygear.com.au/collections/gates-barricade-mpi-fuel-hose"
+    },
+    {
+        "title":  "Proflow fittings \u0026 adapters",
+        "handle":  "proflow-fittings",
+        "url":  "https://racereadygear.com.au/collections/proflow-fittings"
+    },
+    {
+        "title":  "Gift Vouchers - SS Racetech Gift Cards for Car Enthusiasts",
+        "handle":  "race-ready-gear-gift-card",
+        "url":  "https://racereadygear.com.au/collections/race-ready-gear-gift-card"
+    },
+    {
+        "title":  "Aluminium Fuel Line Hard Tube",
+        "handle":  "aluminium-fuel-line-hard-tube-1",
+        "url":  "https://racereadygear.com.au/collections/aluminium-fuel-line-hard-tube-1"
+    },
+    {
+        "title":  "Bulkhead Fittings - Speedflow",
+        "handle":  "bulkhead-fittings",
+        "url":  "https://racereadygear.com.au/collections/bulkhead-fittings"
+    },
+    {
+        "title":  "Holley Small Parts - Carburettor Jets, Gaskets \u0026 Rebuild Kits",
+        "handle":  "holley-small-parts-centre-1",
+        "url":  "https://racereadygear.com.au/collections/holley-small-parts-centre-1"
+    },
+    {
+        "title":  "Aluminium 60 degree bends",
+        "handle":  "aluminium-60-degree-bends-1",
+        "url":  "https://racereadygear.com.au/collections/aluminium-60-degree-bends-1"
+    },
+    {
+        "title":  "Proflow Pod Air Filters \u0026 Breather Filters",
+        "handle":  "pod-filters-1",
+        "url":  "https://racereadygear.com.au/collections/pod-filters-1"
+    },
+    {
+        "title":  "Welch Plug Kits - Brass \u0026 Stainless Steel Core Hole Plugs",
+        "handle":  "welch-plug-kits-1",
+        "url":  "https://racereadygear.com.au/collections/welch-plug-kits-1"
+    },
+    {
+        "title":  "Alternator Brackets",
+        "handle":  "alternator-brackets-1",
+        "url":  "https://racereadygear.com.au/collections/alternator-brackets-1"
+    },
+    {
+        "title":  "Steel for Car Builders - Sheet, Tube \u0026 Fabrication Steel",
+        "handle":  "steel-for-car-builders",
+        "url":  "https://racereadygear.com.au/collections/steel-for-car-builders"
+    },
+    {
+        "title":  "Performance Parts Package Deals",
+        "handle":  "current-package-deals-at-ss-racetech-rods-customs",
+        "url":  "https://racereadygear.com.au/collections/current-package-deals-at-ss-racetech-rods-customs"
+    },
+    {
+        "title":  "100 Series Straight Hose Ends - Speedflow",
+        "handle":  "100-series-straight-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/100-series-straight-hose-ends"
+    },
+    {
+        "title":  "100 Series 45 Degree Hose Ends - Speedflow",
+        "handle":  "100-series-45-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/100-series-45-degree-hose-ends"
+    },
+    {
+        "title":  "100 Series 120 Degree Hose Ends - Speedflow",
+        "handle":  "100-series-120-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/100-series-120-degree-hose-ends"
+    },
+    {
+        "title":  "100 Series 150 Degree Hose Ends - Speedflow",
+        "handle":  "100-series-150-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/100-series-150-degree-hose-ends"
+    },
+    {
+        "title":  "100 Series 180 Degree Hose Ends - Speedflow",
+        "handle":  "100-series-180-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/100-series-180-degree-hose-ends"
+    },
+    {
+        "title":  "100 Series 30 Degree Hose Ends - Speedflow",
+        "handle":  "100-series-30-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/100-series-30-degree-hose-ends"
+    },
+    {
+        "title":  "100 Series 60 Degree Hose Ends - Speedflow",
+        "handle":  "100-series-60-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/100-series-60-degree-hose-ends"
+    },
+    {
+        "title":  "200 Series Straight AN Hose Ends - Speedflow",
+        "handle":  "200-series-straight-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-straight-hose-ends"
+    },
+    {
+        "title":  "200 Series Steel Straight Hose Ends - Speedflow",
+        "handle":  "200-series-steel-straight-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-steel-straight-hose-ends"
+    },
+    {
+        "title":  "200 Series 45° AN Hose Ends - Speedflow",
+        "handle":  "200-series-45-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-45-degree-hose-ends"
+    },
+    {
+        "title":  "200 Series Steel 45 Degree Hose Ends - Speedflow",
+        "handle":  "200-series-steel-45-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-steel-45-degree-hose-ends"
+    },
+    {
+        "title":  "200 Series 90° AN Hose Ends - Speedflow",
+        "handle":  "200-series-90-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-90-degree-hose-ends"
+    },
+    {
+        "title":  "200 Series Steel 90 Degree Hose Ends - Speedflow",
+        "handle":  "200-series-steel-90-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-steel-90-degree-hose-ends"
+    },
+    {
+        "title":  "200 Series 120 Degree Hose Ends - Speedflow",
+        "handle":  "200-series-120-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-120-degree-hose-ends"
+    },
+    {
+        "title":  "200 Series 150 Degree Hose Ends - Speedflow",
+        "handle":  "200-series-150-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-150-degree-hose-ends"
+    },
+    {
+        "title":  "200 Series 180 Degree Hose Ends - Speedflow",
+        "handle":  "200-series-180-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-180-degree-hose-ends"
+    },
+    {
+        "title":  "200 Series 30 Degree Hose Ends - Speedflow",
+        "handle":  "200-series-30-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-30-degree-hose-ends"
+    },
+    {
+        "title":  "200 Series 60 Degree Hose Ends - Speedflow",
+        "handle":  "200-series-60-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/200-series-60-degree-hose-ends"
+    },
+    {
+        "title":  "Speedflow 400 Series Straight Pushlock Hose Ends",
+        "handle":  "400-series-straight-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/400-series-straight-hose-ends"
+    },
+    {
+        "title":  "Speedflow 400 Series 45° Pushlock Hose Ends",
+        "handle":  "400-series-45-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/400-series-45-degree-hose-ends"
+    },
+    {
+        "title":  "Speedflow 400 Series 90° Pushlock Hose Ends",
+        "handle":  "400-series-90-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/400-series-90-degree-hose-ends"
+    },
+    {
+        "title":  "Speedflow 400 Series 120° Pushlock Hose Ends",
+        "handle":  "400-series-120-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/400-series-120-degree-hose-ends"
+    },
+    {
+        "title":  "Speedflow 400 Series 180° Pushlock Hose Ends",
+        "handle":  "400-series-180-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/400-series-180-degree-hose-ends"
+    },
+    {
+        "title":  "Speedflow 400 Series 30° Pushlock Hose Ends",
+        "handle":  "400-series-30-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/400-series-30-degree-hose-ends"
+    },
+    {
+        "title":  "Speedflow 400 Series 60° Pushlock Hose Ends",
+        "handle":  "400-series-60-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/400-series-60-degree-hose-ends"
+    },
+    {
+        "title":  "990 Series Female ORB Weld Bungs - Aluminium - Speedflow",
+        "handle":  "990-series-female-orb-weld-bungs-aluminium",
+        "url":  "https://racereadygear.com.au/collections/990-series-female-orb-weld-bungs-aluminium"
+    },
+    {
+        "title":  "Weld bung - Male Hex Aluminium - Speedflow",
+        "handle":  "weld-bung-male-hex-aluminium",
+        "url":  "https://racereadygear.com.au/collections/weld-bung-male-hex-aluminium"
+    },
+    {
+        "title":  "Female Unions - Speedflow",
+        "handle":  "female-unions",
+        "url":  "https://racereadygear.com.au/collections/female-unions"
+    },
+    {
+        "title":  "133 Series Female 90 Degree Unions - Speedflow",
+        "handle":  "133-series-female-90-degree-unions",
+        "url":  "https://racereadygear.com.au/collections/133-series-female-90-degree-unions"
+    },
+    {
+        "title":  "142 Series Female to Male 45 Degree Unions - Speedflow",
+        "handle":  "142-series-female-to-male-45-degree-unions",
+        "url":  "https://racereadygear.com.au/collections/142-series-female-to-male-45-degree-unions"
+    },
+    {
+        "title":  "Tee -  Swivel on Run - Speedflow",
+        "handle":  "tee-swivel-on-run",
+        "url":  "https://racereadygear.com.au/collections/tee-swivel-on-run"
+    },
+    {
+        "title":  "AN Male To Tube Adapters - Speedflow",
+        "handle":  "an-male-to-tube-adapters",
+        "url":  "https://racereadygear.com.au/collections/an-male-to-tube-adapters"
+    },
+    {
+        "title":  "Female Swivel To Tube Adapter - Speedflow",
+        "handle":  "female-swivel-to-tube-adapter",
+        "url":  "https://racereadygear.com.au/collections/female-swivel-to-tube-adapter"
+    },
+    {
+        "title":  "Cap and Weld Bung Assemblies - Speedflow",
+        "handle":  "filler-cap-weld-bung-assemblies",
+        "url":  "https://racereadygear.com.au/collections/filler-cap-weld-bung-assemblies"
+    },
+    {
+        "title":  "380 Series AN Flare to NPT Steel Adapters - Speedflow",
+        "handle":  "380-series-an-flare-to-npt-steel-adapters",
+        "url":  "https://racereadygear.com.au/collections/380-series-an-flare-to-npt-steel-adapters"
+    },
+    {
+        "title":  "715 Series AN Male To EFI Tube Adapters - Speedflow",
+        "handle":  "715-series-an-male-to-efi-tube-adapters",
+        "url":  "https://racereadygear.com.au/collections/715-series-an-male-to-efi-tube-adapters"
+    },
+    {
+        "title":  "421 Series NPT Hose Tails - Speedflow",
+        "handle":  "421-series-npt-hose-tails",
+        "url":  "https://racereadygear.com.au/collections/421-series-npt-hose-tails"
+    },
+    {
+        "title":  "Misalignment Spacers",
+        "handle":  "misalignment-spacers",
+        "url":  "https://racereadygear.com.au/collections/misalignment-spacers"
+    },
+    {
+        "title":  "Steel Jam Nuts",
+        "handle":  "steel-jam-nuts",
+        "url":  "https://racereadygear.com.au/collections/steel-jam-nuts"
+    },
+    {
+        "title":  "FK Rod Ends",
+        "handle":  "fk-rod-ends",
+        "url":  "https://racereadygear.com.au/collections/fk-rod-ends"
+    },
+    {
+        "title":  "Proflow Cast Aluminium Turbo Elbows \u0026 Reducers",
+        "handle":  "cast-turbo-aluminium",
+        "url":  "https://racereadygear.com.au/collections/cast-turbo-aluminium"
+    },
+    {
+        "title":  "ARP Flywheel \u0026 Flexplate Bolt Kits",
+        "handle":  "arp-flywheel-bolts",
+        "url":  "https://racereadygear.com.au/collections/arp-flywheel-bolts"
+    },
+    {
+        "title":  "ARP Torque Converter Bolt Kits",
+        "handle":  "torque-converter-bolts",
+        "url":  "https://racereadygear.com.au/collections/torque-converter-bolts"
+    },
+    {
+        "title":  "ARP Harmonic Balancer Bolts \u0026 Bolt Kits",
+        "handle":  "arp-harmonic-balancer-bolt",
+        "url":  "https://racereadygear.com.au/collections/arp-harmonic-balancer-bolt"
+    },
+    {
+        "title":  "ARP Main Stud Kits",
+        "handle":  "arp-main-stud-kits",
+        "url":  "https://racereadygear.com.au/collections/arp-main-stud-kits"
+    },
+    {
+        "title":  "Throttle Cable Brackets \u0026 Adjustable Linkage",
+        "handle":  "throttle-cable-brackets",
+        "url":  "https://racereadygear.com.au/collections/throttle-cable-brackets"
+    },
+    {
+        "title":  "Carby stud kits",
+        "handle":  "carby-stud-kits",
+        "url":  "https://racereadygear.com.au/collections/carby-stud-kits"
+    },
+    {
+        "title":  "Silicone Vacuum Hose \u0026 Vacuum Port Caps",
+        "handle":  "silicone-vacuum-hose",
+        "url":  "https://racereadygear.com.au/collections/silicone-vacuum-hose"
+    },
+    {
+        "title":  "Exhaust Wrap",
+        "handle":  "exhaust-wrap",
+        "url":  "https://racereadygear.com.au/collections/exhaust-wrap"
+    },
+    {
+        "title":  "Oil Systems - Oil Pans, Pumps, Coolers \u0026 Breathers",
+        "handle":  "oil-systems",
+        "url":  "https://racereadygear.com.au/collections/oil-systems"
+    },
+    {
+        "title":  "Catalogues",
+        "handle":  "catalogues",
+        "url":  "https://racereadygear.com.au/collections/catalogues"
+    },
+    {
+        "title":  "Holden V8 Performance Parts",
+        "handle":  "holden-308-v8-performance-parts",
+        "url":  "https://racereadygear.com.au/collections/holden-308-v8-performance-parts"
+    },
+    {
+        "title":  "Ford V8 Performance Parts",
+        "handle":  "ford-windsor-v8-performance-parts",
+        "url":  "https://racereadygear.com.au/collections/ford-windsor-v8-performance-parts"
+    },
+    {
+        "title":  "Chev V8 Performance Parts",
+        "handle":  "chev-small-block-v8-performance-parts",
+        "url":  "https://racereadygear.com.au/collections/chev-small-block-v8-performance-parts"
+    },
+    {
+        "title":  "LS Engine Performance Parts",
+        "handle":  "ls-engine-performance-parts",
+        "url":  "https://racereadygear.com.au/collections/ls-engine-performance-parts"
+    },
+    {
+        "title":  "Shop by Engine - Click to View collections inside",
+        "handle":  "shop-by-engine",
+        "url":  "https://racereadygear.com.au/collections/shop-by-engine"
+    },
+    {
+        "title":  "Ford Cleveland V8 Performance Parts",
+        "handle":  "ford-cleveland-v8-performance-parts",
+        "url":  "https://racereadygear.com.au/collections/ford-cleveland-v8-performance-parts"
+    },
+    {
+        "title":  "Ford Windsor Performance Parts",
+        "handle":  "ford-windsor-parts",
+        "url":  "https://racereadygear.com.au/collections/ford-windsor-parts"
+    },
+    {
+        "title":  "Plugs, Caps, Bulkhead Nuts \u0026 Washers - Speedflow",
+        "handle":  "speedflow-plugs-caps-bulkhead-nuts-washers-auto",
+        "url":  "https://racereadygear.com.au/collections/speedflow-plugs-caps-bulkhead-nuts-washers-auto"
+    },
+    {
+        "title":  "143 Series Female to Male 90 Degree Unions - Speedflow",
+        "handle":  "143-series-female-to-male-90-degree-unions-auto",
+        "url":  "https://racereadygear.com.au/collections/143-series-female-to-male-90-degree-unions-auto"
+    },
+    {
+        "title":  "AN Male to O-Ring Port (ORB) - Speedflow",
+        "handle":  "an-male-to-o-ring-port-orb-auto",
+        "url":  "https://racereadygear.com.au/collections/an-male-to-o-ring-port-orb-auto"
+    },
+    {
+        "title":  "Aluminium Tube 30cm Long",
+        "handle":  "aluminium-tube-30cm-long-auto",
+        "url":  "https://racereadygear.com.au/collections/aluminium-tube-30cm-long-auto"
+    },
+    {
+        "title":  "132 Series Female 45 Degree Unions - Speedflow",
+        "handle":  "132-series-female-45-degree-unions-auto",
+        "url":  "https://racereadygear.com.au/collections/132-series-female-45-degree-unions-auto"
+    },
+    {
+        "title":  "997 Series Female NPT Weld Bungs - Aluminium - Speedflow",
+        "handle":  "997-series-female-npt-weld-bungs-aluminium-auto",
+        "url":  "https://racereadygear.com.au/collections/997-series-female-npt-weld-bungs-aluminium-auto"
+    },
+    {
+        "title":  "989 Series Weld Bungs - STAINLESS STEEL - Speedflow",
+        "handle":  "989-series-weld-bungs-auto",
+        "url":  "https://racereadygear.com.au/collections/989-series-weld-bungs-auto"
+    },
+    {
+        "title":  "100 Series 90 Degree Hose Ends - Speedflow",
+        "handle":  "100-series-90-degree-hose-ends",
+        "url":  "https://racereadygear.com.au/collections/100-series-90-degree-hose-ends"
+    },
+    {
+        "title":  "816 Series AN Flare to NPT Adapters - Speedflow",
+        "handle":  "816-series-an-flare-to-npt-adapters-auto",
+        "url":  "https://racereadygear.com.au/collections/816-series-an-flare-to-npt-adapters-auto"
+    },
+    {
+        "title":  "Quick Release Pro Latch - Bonnet Hood Pins",
+        "handle":  "quick-release-pro-latch-bonnet-hood-pins-auto",
+        "url":  "https://racereadygear.com.au/collections/quick-release-pro-latch-bonnet-hood-pins-auto"
+    },
+    {
+        "title":  "Drivetrain Components - Transmission \u0026 Driveline Parts",
+        "handle":  "drivetrain-components-transmission-driveline-parts-auto",
+        "url":  "https://racereadygear.com.au/collections/drivetrain-components-transmission-driveline-parts-auto"
+    },
+    {
+        "title":  "Female to Male Reducers - Speedflow",
+        "handle":  "female-to-male-reducers-auto",
+        "url":  "https://racereadygear.com.au/collections/female-to-male-reducers-auto"
+    },
+    {
+        "title":  "999 Series Male AN Weld Bungs - Speedflow",
+        "handle":  "999-series-male-an-weld-bungs-aluminium-auto",
+        "url":  "https://racereadygear.com.au/collections/999-series-male-an-weld-bungs-aluminium-auto"
+    },
+    {
+        "title":  "Alternators",
+        "handle":  "alternators-auto",
+        "url":  "https://racereadygear.com.au/collections/alternators-auto"
+    },
+    {
+        "title":  "Oval Exhaust Tubing",
+        "handle":  "oval-exhaust-tubing-auto",
+        "url":  "https://racereadygear.com.au/collections/oval-exhaust-tubing-auto"
+    },
+    {
+        "title":  "Female to Male Expanders - Speedflow",
+        "handle":  "female-to-male-expanders-auto",
+        "url":  "https://racereadygear.com.au/collections/female-to-male-expanders-auto"
+    },
+    {
+        "title":  "Clearance Stock",
+        "handle":  "clearance-stock",
+        "url":  "https://racereadygear.com.au/collections/clearance-stock"
+    }
+]
