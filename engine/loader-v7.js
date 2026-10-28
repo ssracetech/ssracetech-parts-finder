@@ -182,6 +182,33 @@
             );
         }
 
+        // Load the public Shopify collection directory separately.
+        // This is optional and must never block product search.
+        window.ssrV7Collections = [];
+
+        try {
+            const collectionsResponse = await fetch("data/collections.json");
+
+            if (collectionsResponse.ok) {
+                const collections = await collectionsResponse.json();
+
+                if (Array.isArray(collections)) {
+                    window.ssrV7Collections = collections.filter(collection =>
+                        collection &&
+                        typeof collection.title === "string" &&
+                        typeof collection.url === "string" &&
+                        /^https:\/\/racereadygear\.com\.au\/collections\/[a-z0-9-]+\/?$/i.test(collection.url)
+                    );
+                }
+            }
+
+            console.log("V7 COLLECTION DIRECTORY READY", {
+                collections: window.ssrV7Collections.length
+            });
+        } catch (error) {
+            console.warn("V7 collection directory unavailable:", error.message);
+        }
+
         window.ssrV7Products = products;
 
         console.log("SS RACETECH V7 CATALOGUE READY", {
