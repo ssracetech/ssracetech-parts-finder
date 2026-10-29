@@ -150,7 +150,7 @@ function buildProductIntro(results, query) {
     if (selected.length) {
         intro += " Explore related collections: " +
             selected.map(collection =>
-                '<a href="' + escapeHTML(collection.url) + '">' +
+                '<a href="' + escapeHTML(collection.url) + '" target="_blank" rel="noopener noreferrer">' +
                 escapeHTML(collection.title) +
                 "</a>"
             ).join(" or ") +
